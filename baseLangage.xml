@@ -1,0 +1,95 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Extrait p112 thèse H.Bouziane
+Description d'un composant :
+
+	- componentfiles :
+		- componentfile :
+			- fileinarchive :
+
+	- partitioning :
+		- processcollocation :
+			- homeplacement :
+				- componentfileref : 
+		- executableplacement :
+
+	- connections :
+		- extension :
+			- topology :
+	-  :
+	-  :
+	-  :
+	-  :
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+<componentassembly id="CONCRETEASSEMBLY">
+
+
+
+	<componentfiles>
+	.. <!-- "Master", "Adapt_client", "Adapt_server", "Worker" -->
+
+		<componentfile id="Diet_agent">     <!-- agent DIET(objets MA et LAs) -->
+			<fileinarchive name="diet_agent.csd"/>
+		</componentfile>
+	</componentfiles>
+
+
+
+	<partitioning>
+		<processcollocation cardinality="1" id="colloc_master_client">
+			<homeplacement cardinality="1" id="MasterHome">
+				.. <!-- ? -->
+			</homeplacement>
+			<homeplacement cardinality="1" id="AdaptClientHome">
+				<componentfileref idref="Adapt_client"/>
+				<componentinstantiation id="adapclt">
+					<extension> <!-- configuration spécifique à DIET-->
+						<configuration>
+							<fileinarchive name="clientDiet.cfg"/> <!-- Configuration d’un client DIET-->
+						</configuration>
+					</extension>
+				</componentinstantiation>
+			</homeplacement>
+		</processcollocation>
+
+		<executableplacement cardinality="1" id="MA_placement"> <!-- un agent maître -->
+			<componentfileref idref="Diet_agent"/>
+			<componentinstantiation id="MA">
+				<extension>
+					<configuration>
+						<fileinarchive name="MA.cfg"/>  <!-- Configuration du MA nécessaire au -->
+					</configuration>              <!-- lancement de l’exécutable correspondant -->
+				</extension>
+			</componentinstantiation>
+		</executableplacement>
+
+		<executableplacement cardinality="1" id="LA_placement_1"> <!-- agent local 1/2 -->
+			<componentfileref idref="Diet_agent"/>
+			<componentinstantiation id="LA1">
+			<extension>
+				.. <!-- Configuration (LA1.cfg) -->  
+			</extension>
+			</componentinstantiation>
+		</executableplacement>
+
+		<executableplacement cardinality="1" id="LA_placement_2">
+			.. <!-- agent local 2/2 -->
+		</executableplacement>
+
+		<processcollocation cardinality="4" id="Colloc_SeD_Worker">
+			.. <!-- Composants de type "Worker" et "Adapt_server" -->
+		</processcollocation>
+	</partitioning>
+
+
+
+	<connections>
+		.. <!-- connexion de "pM" à "pAC" et des "pAS"s aux "pW"s -->
+		<extension class="diet">   <!-- Topologie de l’architecture DIET-->
+			<topology src="MA" dst="LA1" type="server" />
+			<topology src="MA" dst="LA2" type="server" />
+			<topology src="LA1" dst="colloc_SeD_Worker" type="server" />
+			<topology src="colloc_master_client" dst="MA" type="client" />
+		</extension>
+	</connections>
+
+</componentassembly>
