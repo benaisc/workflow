@@ -1,0 +1,99 @@
+<!-- Un composant primitif est composé de -->
+component ::=
+<component name=string>
+  inport outport attributes* primitive
+</component>
+
+<!-- un port d'entrée...
+  i.e vu comme un input
+      std::istream en local === pipeline '|'
+      un fichier à parser, tout flot de données..
+?-->
+inport ::=
+<inport>
+  <name>string</name>
+  <type>string</type>
+  (<set>string</set>)?
+</inport>
+
+<!-- un port de sortie...
+    i.e vu comme un output (std::outstream)
+    un fichier de log, ...
+-->
+outport ::=
+<outport>
+  <name>string</name>
+  <type>string</type>
+  (<set>string</set>)?
+</outport>
+
+<!-- ?
+  une liste d'arguments passés à la primitive ?
+-->
+attributes ::=
+<attributes>
+  <name>string</name>
+  <type>string</type>
+  (<set>string</set>)?
+</attribute>
+
+<!-- ?
+  un executable #!/bin/bash, python, ...
+-->
+primitive ::=
+<primitive>
+  <signature>string</signature>
+  <type>string</type>
+</primitive>
+
+<!-- === un dataflow pur -->
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- le controlflow -->
+
+content ::= primitive [| composite]
+primitive ::= <impl type=string signature=string/>
+
+composite ::= <body> stcmassembly </body>
+stcmassembly ::= declaration? instruction? ///point entrée
+declaration ::= <declare> component* instance* configport* </declare>
+instance ::=
+<instance name=string componentRef=string>
+  content
+</instance>
+
+configport ::= inout [| clientserver]
+
+[ clientserver ::= <setPort client=string server=string/>
+| <unsetPort client=string (server=string)?/> ]
+
+inout ::= <setPort in=string out=string/>
+| <unsetPort in=string (out=string)?/>
+
+instruction ::= createInstance|executetask|configport|seq|if| dag
+
+createInstance ::= <createInstance name=string componentRef=string PATH=string signature=string/>
+
+executetask ::= <exectask nameInstance=string/>
+
+seq ::=
+<sequence name=string>
+  port* attribute* declaration instruction+
+</sequence>
+
+if ::= <if name=string> port* attribute* declaration condition then else?</if>
+condition ::= <condition> expr </condition>
+then ::= <then> stcmassembly </then>
+else ::= <else> stcmassembly </else>
+
+boolean ::= "true" | "false"

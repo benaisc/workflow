@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<!-- component ::=
+<component name=string>
+  port* attribute* content?
+</component>-->
+<xs:element name="component"/>
+  <xs:complexType>
+    <xs:sequence>
+
+      <xs:element name="inport">
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:string" use="required"/>
+          <xs:attribute name="type" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="outport">
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:string" use="required"/>
+          <xs:attribute name="type" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="attribute">
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:string" use="required"/>
+          <xs:attribute name="type" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="content">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:attribute name="path" type="xs:string" use="required"/>
+            <xs:attribute name="signature" type="xs:string" use="required"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+  </xs:complexType>
+</xs:element>
