@@ -125,10 +125,10 @@
 
 
 <xs:element name="stcmassembly">
-  <xs:complexType name="sequenceType">
+  <xs:complexType>
     <xs:sequence>
-      <xs:element name="declare" type="declareType"/>
-      <xs:element name="instruction" type="declareType"/>
+      <xs:element name="declare" type="declareType" minOccurs="0"/>
+      <xs:element name="instruction" type="instructionType" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 </xs:element>

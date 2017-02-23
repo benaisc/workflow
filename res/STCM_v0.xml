@@ -1,5 +1,11 @@
 <!----------------------------------------------------------------------------->
 <!-- le controlflow -->
+On à placer primitive dans component, le retirant de instance
+et dans instance, on ne reference que le composant en ajoutant ses params
+extention configport && inout (===ajout de leurs balises)
+renommage de impl en primitive car moche
+setPort servira aussi à unsetPort, d'ou sa non existence dans l'UML
+
 <!----------------------------------------------------------------------------->
 stcmassembly ::= <stcmassembly>declaration? instruction? </stcmassembly>
 <!----------------------------------------------------------------------------->
@@ -70,7 +76,7 @@ Array<Type> ::= {value:Type, ...}
 <!------------------------------ EXEMPLE -------------------------------------->
 <!----------------------------------------------------------------------------->
 <stcmassembly> <!-- declaration? instruction? -->
-  <declare> <!-- component* instance* configport* -->
+  <declare> <!-- component* instance* configport? -->
 
     <component name=string> <!-- port* attribute* primitive-->
       <port> <!-- [inport | outport [| clientport | serverport]]* -->
@@ -84,11 +90,10 @@ Array<Type> ::= {value:Type, ...}
       <attribute name=string type=string (set=string)?/>
     </component>
 
-
     <instance name=string componentRef=string parameters=string/>
 
     <configport> <!-- inout [| clientserver] -->
-      <inout> <!-- setPort | unsetPort  -->
+      <inout> <!-- setPort* | unsetPort*  -->
         <setPort in=string out=string/>
         <unsetPort in=string (out=string)?/>
       </inout>
@@ -96,7 +101,7 @@ Array<Type> ::= {value:Type, ...}
   </declare>
 
   <instruction> <!-- createInstance|exectask|configport|seq|if| dag -->
-    <createInstance name=string componentRef=string path=string signature=string/>
+    <createInstance name=string componentRef=string parameters=string/>
     <exectask nameInstance=string/>
 
     <sequence name=string>
