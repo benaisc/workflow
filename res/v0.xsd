@@ -1,44 +1,134 @@
 <?xml version="1.0"?>
+<xs:complexType name="inoutportType">
+  <xs:attribute name="name" type="xs:string" use="required"/>
+  <xs:attribute name="type" type="xs:string" use="required"/>
+</xs:complexType>
 
-<!-- component ::=
-<component name=string>
-  port* attribute* content?
-</component>-->
-<xs:element name="component"/>
-  <xs:complexType>
+<xs:complexType name="portType">
+  <xs:sequence>
+    <xs:element name="inport" type="inoutportType" minOccurs="0" maxOccurs="unbounded"/>
+    <xs:element name="outport" type="inoutportType" minOccurs="0" maxOccurs="unbounded"/>
+  </xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="attributeType">
+  <xs:attribute name="name" type="xs:string" use="required"/>
+  <xs:attribute name="type" type="xs:string" use="required"/>
+  <xs:attribute name="set" type="xs:string"/>
+</xs:complexType>
+
+<xs:complexType name="primitiveType">
+  <xs:attribute name="type" type="xs:string" use="required"/>
+  <xs:attribute name="signature" type="xs:string" use="required"/>
+</xs:complexType>
+
+<xs:complexType name="componentType">
+  <xs:sequence>
+    <xs:element name="port" type="portType" minOccurs="0"/>
+    <xs:element name="attribute" type="attributeType" minOccurs="0" maxOccurs="unbounded"/>
+    <xs:element name="primitive" type="primitiveType"/>
+  </xs:sequence>
+  <xs:attribute name="name" type="xs:string" use="required"/>
+</xs:complexType>
+
+<xs:complexType name="instanceType">
+  <xs:sequence>
+    <xs:element name="primitive" type="primitiveType"/>
+  </xs:sequence>
+  <xs:attribute name="name" type="xs:string" use="required"/>
+  <xs:attribute name="componentRef" type="xs:string" use="required"/>
+</xs:complexType>
+
+<xs:complexType name="setPortType">
+  <xs:attribute name="in" type="xs:string" use="required"/>
+  <xs:attribute name="out" type="xs:string" use="required"/>
+</xs:complexType>
+
+<xs:complexType name="unsetPortType">
+  <xs:attribute name="in" type="xs:string" use="required"/>
+  <xs:attribute name="out" type="xs:string"/>
+</xs:complexType>
+
+<xs:complexType name="inoutType">
+  <xs:sequence>
+    <xs:element name="setPort" type="setPortType" minOccurs="0"/>
+    <xs:element name="unsetPort" type="unsetPortType" minOccurs="0"/>
+  </xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="configportType">
+  <xs:sequence>
+    <xs:element name="inout" type="inoutType" minOccurs="0"/>
+  </xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="declareType">
+  <xs:sequence>
+    <xs:element name="component" type="componentType" minOccurs="0" maxOccurs="unbounded"/>
+    <xs:element name="instance" type="instanceType" minOccurs="0" maxOccurs="unbounded"/>
+    <xs:element name="configport" type="configportType" minOccurs="0"/>
+  </xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="createInstanceType">
+  <xs:attribute name="name" type="xs:string" use="required"/>
+  <xs:attribute name="componentRef" type="xs:string" use="required"/>
+  <xs:attribute name="path" type="xs:string" use="required"/>
+  <xs:attribute name="signature" type="xs:string" use="required"/>
+</xs:complexType>
+
+<xs:complexType name="exectaskType">
+  <xs:attribute name="nameInstance" type="xs:string" use="required"/>
+</xs:complexType>
+
+<xs:complexType name="conditionType">
+  expr ?
+</xs:complexType>
+
+<xs:complexType name="thenelseType">
+  <xs:sequence>
+    <xs:element ref="stcmassembly"/>
+  </xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="ifType">
+  <xs:sequence>
+    <xs:element name="port" type="portType" minOccurs="0"/>
+    <xs:element name="attribute" type="attributeType" minOccurs="0" maxOccurs="unbounded"/>
+    <xs:element name="declare" type="declareType"/>
+    <xs:element name="cond" type="conditionType"/>
+    <xs:element name="then" type="thenelseType"/>
+    <xs:element name="else" type="thenelseType" minOccurs="0"/>
+  </xs:sequence>
+  <xs:attribute name="name" type="xs:string" use="required"/>
+</xs:complexType>
+
+<xs:complexType name="instructionType">
+  <xs:choice>
+    <xs:element name="createInstance" type="createInstanceType"/>
+    <xs:element name="exectask" type="exectaskType"/>
+    <xs:element name="configport" type="configportType"/>
+    <xs:element name="if" type="ifType"/>
+    sequenceType?
+  </xs:choice>
+</xs:complexType>
+
+<xs:complexType name="sequenceType">
+  <xs:sequence>
+    <xs:element name="port" type="portType" minOccurs="0"/>
+    <xs:element name="attribute" type="attributeType" minOccurs="0" maxOccurs="unbounded"/>
+    <xs:element name="declare" type="declareType"/>
+    instructionType ?
+  </xs:sequence>
+  <xs:attribute name="name" type="xs:string" use="required"/>
+</xs:complexType>
+
+
+<xs:element name="stcmassembly">
+  <xs:complexType name="sequenceType">
     <xs:sequence>
-
-      <xs:element name="inport">
-        <xs:complexType>
-          <xs:attribute name="name" type="xs:string" use="required"/>
-          <xs:attribute name="type" type="xs:string" use="required"/>
-        </xs:complexType>
-      </xs:element>
-
-      <xs:element name="outport">
-        <xs:complexType>
-          <xs:attribute name="name" type="xs:string" use="required"/>
-          <xs:attribute name="type" type="xs:string" use="required"/>
-        </xs:complexType>
-      </xs:element>
-
-      <xs:element name="attribute">
-        <xs:complexType>
-          <xs:attribute name="name" type="xs:string" use="required"/>
-          <xs:attribute name="type" type="xs:string" use="required"/>
-        </xs:complexType>
-      </xs:element>
-
-      <xs:element name="content">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:attribute name="path" type="xs:string" use="required"/>
-            <xs:attribute name="signature" type="xs:string" use="required"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-
+      <xs:element name="declare" type="declareType"/>
+      <xs:element name="instruction" type="declareType"/>
     </xs:sequence>
-    <xs:attribute name="name" type="xs:string" use="required"/>
   </xs:complexType>
 </xs:element>

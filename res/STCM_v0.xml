@@ -1,0 +1,153 @@
+<!----------------------------------------------------------------------------->
+<!-- le controlflow -->
+<!----------------------------------------------------------------------------->
+stcmassembly ::= <stcmassembly>declaration? instruction? </stcmassembly>
+<!----------------------------------------------------------------------------->
+declaration ::= <declare> component* instance* configport* </declare>
+<!----------------------------------------------------------------------------->
+component ::= <component name=string> port* attribute* primitive </component>
+
+port ::= <port> inport | outport [| clientport | serverport] </port>
+inport ::= <inport name=string type=string (set=string)?/>
+outport ::= <outport name=string type=string/>
+[ clientport ::= <clientport name=string type=string (set=string)?/>
+serverport ::= <serverport name=string type=string/> ]
+
+attribute ::= <attribute name=string type=string (set=string)?/>
+
+primitive ::= <primitive type=string signature=string/>
+<!----------------------------------------------------------------------------->
+instance ::=
+<instance name=string componentRef=string>
+  primitive
+</instance>
+
+composite ::= <body> stcmassembly </body>
+<!----------------------------------------------------------------------------->
+configport ::= <configport> inout [| clientserver] </configport>
+
+inout ::=
+<inout>
+  <setPort in=string out=string/> | <unsetPort in=string (out=string)?/>
+</inout>
+
+[ clientserver ::=
+<clientserver>
+  <setPort client=string server=string/> | <unsetPort client=string (server=string)?/>
+</clientserver> ]
+<!----------------------------------------------------------------------------->
+instruction ::= <instruction> createInstance|executetask|configport|seq|if| dag </instruction>
+
+createInstance ::= <createInstance name=string componentRef=string PATH=string signature=string/>
+
+executetask ::= <exectask nameInstance=string/>
+
+seq ::=
+<sequence name=string>
+  port* attribute* declaration instruction+
+</sequence>
+
+if ::= <if name=string> port* attribute* declaration condition then else?</if>
+condition ::= <condition> expr </condition>
+then ::= <then> stcmassembly </then>
+else ::= <else> stcmassembly </else>
+
+
+
+<!-----------------------------------------------------------------------------
+--------------------------------- TYPES ---------------------------------------
+------------------------------------------------------------------------------>
+null ::= null
+string ::= "trivial"
+boolean ::= 'true' | 'false'
+integer ::= [0-9]+
+numeric ::= [0-9]*\.[0-9]+
+Array<Type> ::= {value:Type, ...}
+
+
+
+<!----------------------------------------------------------------------------->
+<!------------------------------ EXEMPLE -------------------------------------->
+<!----------------------------------------------------------------------------->
+<stcmassembly> <!-- declaration? instruction? -->
+  <declare> <!-- component* instance* configport* -->
+    <component name=string> <!-- port* attribute* primitive -->
+      <port> <!-- [inport | outport [| clientport | serverport]]* -->
+        <inport name=string type=string/>
+        <outport name=string type=string/>
+      </port>
+
+      <attribute name=string type=string (set=string)?/>
+
+      <primitive type=string signature=string/>
+    </component>
+
+    <instance name=string componentRef=string>
+      <primitive type=string signature=string/>
+    </instance>
+
+    <configport> <!-- inout [| clientserver] -->
+      <inout> <!-- setPort | unsetPort  -->
+        <setPort in=string out=string/>
+        <unsetPort in=string (out=string)?/>
+      </inout>
+    </configport>
+  </declare>
+
+  <instruction> <!-- createInstance|exectask|configport|seq|if| dag -->
+    <createInstance name=string componentRef=string path=string signature=string/>
+    <exectask nameInstance=string/>
+
+    <sequence name=string>
+      <!-- port* attribute* declare instruction+ -->
+    </sequence>
+
+    <if name=string> <!--port* attribute* declaration condition then else? -->
+      <condition> expr </condition>
+      <then> stcmassembly </then>
+      <else> stcmassembly </else>
+    </if>
+  </instruction>
+</stcmassembly>
+
+
+
+
+
+
+<!----------------------------------------------------------------------------->
+<!-- un dataflow pur -->
+<!----------------------------------------------------------------------------->
+
+<!-- Un composant primitif est composé de -->
+component ::=
+<component name=string>
+  input output attributes* primitive
+</component>
+
+<!-- std::istream en local === pipeline '|'
+      un fichier à parser, tout flot de données.. -->
+input ::=
+<input>
+  <name>string</name>
+  <type>string</type>
+</input>
+
+<!-- i.e std::outstream, un fichier de log, .. -->
+<output>
+  <name>string</name>
+  <type>string</type>
+</output>
+
+<!-- ? une liste d'arguments passés à la primitive ? -->
+<attributes>
+  <name>string</name>
+  <type>string</type>
+  (<set>string</set>)?
+</attribute>
+
+<!-- ? un executable #!/bin/bash, python, ... -->
+<primitive>
+  <signature>string</signature>
+  <type>string</type>
+</primitive>
