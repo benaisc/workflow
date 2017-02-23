@@ -5,7 +5,7 @@ stcmassembly ::= <stcmassembly>declaration? instruction? </stcmassembly>
 <!----------------------------------------------------------------------------->
 declaration ::= <declare> component* instance* configport* </declare>
 <!----------------------------------------------------------------------------->
-component ::= <component name=string> port* attribute* primitive </component>
+component ::= <component name=string> port* attribute* primitive</component>
 
 port ::= <port> inport | outport [| clientport | serverport] </port>
 inport ::= <inport name=string type=string (set=string)?/>
@@ -15,12 +15,12 @@ serverport ::= <serverport name=string type=string/> ]
 
 attribute ::= <attribute name=string type=string (set=string)?/>
 
-primitive ::= <primitive type=string signature=string/>
+
 <!----------------------------------------------------------------------------->
+primitive ::= <primitive type=string signature=string/>
+
 instance ::=
-<instance name=string componentRef=string>
-  primitive
-</instance>
+<instance name=string componentRef=string parameters=string/>
 
 composite ::= <body> stcmassembly </body>
 <!----------------------------------------------------------------------------->
@@ -71,20 +71,21 @@ Array<Type> ::= {value:Type, ...}
 <!----------------------------------------------------------------------------->
 <stcmassembly> <!-- declaration? instruction? -->
   <declare> <!-- component* instance* configport* -->
-    <component name=string> <!-- port* attribute* primitive -->
+
+    <component name=string> <!-- port* attribute* primitive-->
       <port> <!-- [inport | outport [| clientport | serverport]]* -->
+
         <inport name=string type=string/>
         <outport name=string type=string/>
+      
+      <primitive type=string signature=string/>
       </port>
 
       <attribute name=string type=string (set=string)?/>
-
-      <primitive type=string signature=string/>
     </component>
 
-    <instance name=string componentRef=string>
-      <primitive type=string signature=string/>
-    </instance>
+
+    <instance name=string componentRef=string parameters=string/>
 
     <configport> <!-- inout [| clientserver] -->
       <inout> <!-- setPort | unsetPort  -->

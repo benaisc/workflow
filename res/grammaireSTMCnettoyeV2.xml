@@ -1,6 +1,6 @@
-component ::=
+ component ::=
 <component name=string (extends=string)?>
-  port* [attribute*]
+  port* [attribute*] primitive
 </component>
 
 port ::= inport | outport [| clientport | serverport]
@@ -23,9 +23,7 @@ stcmassembly ::= declaration instruction ///point entrée
 declaration ::= <declare> component* instance* configport* </declare>
 
 instance ::=
-<instance name=string componentRef=string>
-  primitive
-</instance>
+<instance name=string componentRef=string parameters=string/>
 
 configport ::= inout [| clientserver]
 
