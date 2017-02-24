@@ -83,7 +83,7 @@
 </xs:complexType>
 
 <xs:complexType name="conditionType">
-  expr ?
+  expr ?   <!-- Ici probleme -->
 </xs:complexType>
 
 <xs:complexType name="thenelseType">
@@ -110,7 +110,7 @@
     <xs:element name="exectask" type="exectaskType"/>
     <xs:element name="configport" type="configportType"/>
     <xs:element name="if" type="ifType"/>
-    <xs:element ref="sequenceType"/>
+    <xs:element ref="sequenceType"/> <!-- Ici probleme -->
   </xs:choice>
 </xs:complexType>
 
@@ -119,7 +119,7 @@
     <xs:element name="port" type="portType" minOccurs="0"/>
     <xs:element name="attribute" type="attributeType" minOccurs="0" maxOccurs="unbounded"/>
     <xs:element name="declare" type="declareType"/>
-    <xs:element ref="instructionType"/>
+    <xs:element ref="instructionType"/> <!-- Ici probleme -->
   </xs:sequence>
   <xs:attribute name="name" type="xs:string" use="required"/>
 </xs:complexType>
@@ -132,3 +132,11 @@
     </xs:sequence>
   </xs:complexType>
 </xs:element>
+
+
+<!--
+1) Validation d'un XML-stcmassembly par un tool XSD à définir
+2) Instanciation de la classe stcmassembly contenant les info. XMLSTCM
+  par un parseur à définir
+3) l'Ordonnanceur utilise la classe et fait de la magie à définir
+-->
