@@ -1,57 +1,61 @@
-<!----------------------------------------------------------------------------->
-<!-- le controlflow -->
-On à placer primitive dans component, le retirant de instance
-et dans instance, on ne reference que le composant en ajoutant ses params
-extention configport && inout (===ajout de leurs balises)
-renommage de impl en primitive car moche
+<!-----------------------------------------------------------------------------
+                          le controlflow
+    23 Février
+<primitive> dans component décrit le langage du script (se situant à path)
+permettant de demarrer le composant à executer par l'appel (bash) de la signature.
+<instance> ne fera que référencer un composant, en ajoutant (éventuellement)
+des parametres à sa signature
+
+extention de port, configport && inout (=== ajout de leurs balises)
+
+renommage de la balise <impl> de primitive en <primitive> (cohérence)
+renommage de 'type' dans <primitive> en 'lang' (cohérence)
+
 setPort servira aussi à unsetPort, d'ou sa non existence dans l'UML
+les [] correspondent aux ajouts prévus pour la V2
 
-<!----------------------------------------------------------------------------->
-stcmassembly ::= <stcmassembly>declaration? instruction? </stcmassembly>
-<!----------------------------------------------------------------------------->
-declaration ::= <declare> component* instance* configport* </declare>
-<!----------------------------------------------------------------------------->
-component ::= <component name=string> port* attribute* primitive</component>
+? le set=string dans inport
+? expr dans cond
+?
 
-port ::= <port> inport | outport [| clientport | serverport] </port>
+------------------------------------------------------------------------------->
+stcmassembly ::= <stcmassembly> declaration? instruction? </stcmassembly>
+<!----------------------------------------------------------------------------->
+declaration ::= <declare> component* instance* configport? </declare>
+<!----------------------------------------------------------------------------->
+component ::= <component name=string> port? attribute* primitive</component>
+
+port ::= <port> inport* | outport* [| clientport | serverport] </port>
+
 inport ::= <inport name=string type=string (set=string)?/>
 outport ::= <outport name=string type=string/>
-[ clientport ::= <clientport name=string type=string (set=string)?/>
-serverport ::= <serverport name=string type=string/> ]
+[ clientport ::= <clientport name=string type=string (set=string)?/> ]
+[ serverport ::= <serverport name=string type=string/> ]
 
 attribute ::= <attribute name=string type=string (set=string)?/>
 
-
+primitive ::= <primitive lang=string path=string signature=string/>
 <!----------------------------------------------------------------------------->
-primitive ::= <primitive type=string signature=string/>
-
-instance ::=
-<instance name=string componentRef=string parameters=string/>
-
-composite ::= <body> stcmassembly </body>
+instance ::= <instance name=string componentRef=string parameters=string/>
 <!----------------------------------------------------------------------------->
 configport ::= <configport> inout [| clientserver] </configport>
 
-inout ::=
-<inout>
-  <setPort in=string out=string/> | <unsetPort in=string (out=string)?/>
-</inout>
+inout ::= <inout> setPort* | unsetPort* </inout>
 
-[ clientserver ::=
-<clientserver>
-  <setPort client=string server=string/> | <unsetPort client=string (server=string)?/>
-</clientserver> ]
+setPort ::= <setPort in=string out=string/>
+unsetPort ::= <unsetPort in=string (out=string)?/>
+
+[ clientserver ::= <clientserver> setRemotePort* | unsetRemotePort* </clientserver> ]
+[ setRemotePort ::= <setRemotePort client=string server=string/> ]
+[ unsetRemotePort ::= <unsetRemotePort client=string (server=string)?/> ]
 <!----------------------------------------------------------------------------->
-instruction ::= <instruction> createInstance|executetask|configport|seq|if| dag </instruction>
+instruction ::= <instruction> createInstance|exectask|configport|seq|if| dag </instruction>
 
 createInstance ::= <createInstance name=string componentRef=string PATH=string signature=string/>
 
-executetask ::= <exectask nameInstance=string/>
+exectask ::= <exectask nameInstance=string/>
 
-seq ::=
-<sequence name=string>
-  port* attribute* declaration instruction+
-</sequence>
+seq ::= <sequence name=string> port? attribute* declaration instruction+ </sequence>
 
 if ::= <if name=string> port* attribute* declaration condition then else?</if>
 condition ::= <condition> expr </condition>
@@ -68,7 +72,7 @@ string ::= "trivial"
 boolean ::= 'true' | 'false'
 integer ::= [0-9]+
 numeric ::= [0-9]*\.[0-9]+
-Array<Type> ::= {value:Type, ...}
+Array<Type> ::= {value1, value2, ...}
 
 
 
@@ -77,17 +81,15 @@ Array<Type> ::= {value:Type, ...}
 <!----------------------------------------------------------------------------->
 <stcmassembly> <!-- declaration? instruction? -->
   <declare> <!-- component* instance* configport? -->
-
     <component name=string> <!-- port* attribute* primitive-->
       <port> <!-- [inport | outport [| clientport | serverport]]* -->
-
         <inport name=string type=string/>
         <outport name=string type=string/>
-      
-      <primitive type=string signature=string/>
       </port>
 
       <attribute name=string type=string (set=string)?/>
+
+      <primitive type=string signature=string/>
     </component>
 
     <instance name=string componentRef=string parameters=string/>
@@ -105,7 +107,7 @@ Array<Type> ::= {value:Type, ...}
     <exectask nameInstance=string/>
 
     <sequence name=string>
-      <!-- port* attribute* declare instruction+ -->
+      <!-- port? attribute* declare instruction+ -->
     </sequence>
 
     <if name=string> <!--port* attribute* declaration condition then else? -->
@@ -115,6 +117,26 @@ Array<Type> ::= {value:Type, ...}
     </if>
   </instruction>
 </stcmassembly>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

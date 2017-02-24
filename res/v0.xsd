@@ -1,4 +1,6 @@
 <?xml version="1.0"?>
+<!-- XSD quickguide : https://www.w3schools.com/xmL/schema_intro.asp -->
+
 <xs:complexType name="inoutportType">
   <xs:attribute name="name" type="xs:string" use="required"/>
   <xs:attribute name="type" type="xs:string" use="required"/>
@@ -18,7 +20,8 @@
 </xs:complexType>
 
 <xs:complexType name="primitiveType">
-  <xs:attribute name="type" type="xs:string" use="required"/>
+  <xs:attribute name="lang" type="xs:string" use="required"/>
+  <xs:attribute name="path" type="xs:string" use="required"/>
   <xs:attribute name="signature" type="xs:string" use="required"/>
 </xs:complexType>
 
@@ -32,11 +35,9 @@
 </xs:complexType>
 
 <xs:complexType name="instanceType">
-  <xs:sequence>
-    <xs:element name="primitive" type="primitiveType"/>
-  </xs:sequence>
   <xs:attribute name="name" type="xs:string" use="required"/>
   <xs:attribute name="componentRef" type="xs:string" use="required"/>
+  <xs:attribute name="parameters" type="xs:string"/>
 </xs:complexType>
 
 <xs:complexType name="setPortType">
@@ -109,7 +110,7 @@
     <xs:element name="exectask" type="exectaskType"/>
     <xs:element name="configport" type="configportType"/>
     <xs:element name="if" type="ifType"/>
-    sequenceType?
+    <xs:element ref="sequenceType"/>
   </xs:choice>
 </xs:complexType>
 
@@ -118,11 +119,10 @@
     <xs:element name="port" type="portType" minOccurs="0"/>
     <xs:element name="attribute" type="attributeType" minOccurs="0" maxOccurs="unbounded"/>
     <xs:element name="declare" type="declareType"/>
-    instructionType ?
+    <xs:element ref="instructionType"/>
   </xs:sequence>
   <xs:attribute name="name" type="xs:string" use="required"/>
 </xs:complexType>
-
 
 <xs:element name="stcmassembly">
   <xs:complexType>
