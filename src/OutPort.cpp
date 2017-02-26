@@ -1,7 +1,4 @@
 #include "OutPort.h"
 
-OutPort::OutPort(string n, string t)
-{
-    Port::Port(n,t);
-}
 
+OutPort::OutPort(string n, string t) : Port(n,t){}

@@ -1,12 +1,10 @@
-#ifndef INPORT_H
-#define INPORT_H
+#ifndef __INPORT_H__
+#define __INPORT_H__
 
 #include "Port.h"
-#include string.h
 
-using namespace std;
 
-class InPort::Port
+class InPort : public Port
 {
 private:
     string set;
@@ -14,6 +12,8 @@ private:
 public:
     InPort(string n, string t);
     InPort(string n, string t, string s);
+
+    bool isSetted() const;
 };
 
-#endif // PORTIN_H
+#endif

@@ -2,11 +2,9 @@
 #define OUTPORT_H
 
 #include "Port.h"
-#include string.h
 
-using namespace std;
 
-class OutPort::Port
+class OutPort : public Port
 {
 public:
     OutPort(string n, string t);

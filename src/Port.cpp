@@ -1,10 +1,4 @@
 #include "Port.h"
 
 
-
-port::port(string n, string t)
-{
-    this.name = n;
-    this.type = t;
-}
-
+Port::Port(string n, string t) : name(n), type(t) {}

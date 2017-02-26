@@ -1,18 +1,17 @@
-#ifndef PORT_H
-#define PORT_H
+#ifndef __PORT_H__
+#define __PORT_H__
 
-#include string.h
+#include <string>
 
-using namespace std;
 
 class Port
 {
-private:
+protected:
     string name;
     string type;
 
 public:
-    virtual Port(string n, string t);
+	explicit Port(string name, string type);
 };
 
 #endif // PORT_H
