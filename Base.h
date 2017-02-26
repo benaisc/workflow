@@ -1,17 +1,34 @@
+/*! \file Base.h
+    \brief A Documented template file.
+    
+    +Xtra Details.
+*/
+
 #ifndef __BASE_H__
 #define __BASE_H__
 
 #include <...>
 
-using namespace std;
 
+/*! \class Base
+    \brief A base class.
 
+    A detailed description.
+*/
 class Base{
 	private:
-		attr..
+		/*! \var attr
+			\brief A brief explanation for attr
+		*/
+		attr
 
 	public:
-		meth...
+		/*! \fn void meth(params)
+			\brief What does it do.
+			\param param1 description...
+			\return void
+		*/
+		void meth(params);
 };
 
 

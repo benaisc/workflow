@@ -83,7 +83,7 @@
 </xs:complexType>
 
 <xs:complexType name="conditionType">
-  expr ?   <!-- Ici probleme -->
+  expr ?   <!-- ? -->
 </xs:complexType>
 
 <xs:complexType name="thenelseType">

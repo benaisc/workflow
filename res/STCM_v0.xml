@@ -16,14 +16,12 @@ les [] correspondent aux ajouts prévus pour la V2
 
 ? le set=string dans inport
 ? expr dans cond
-?
-
 ------------------------------------------------------------------------------->
 stcmassembly ::= <stcmassembly> declaration? instruction? </stcmassembly>
 <!----------------------------------------------------------------------------->
 declaration ::= <declare> component* instance* configport? </declare>
 <!----------------------------------------------------------------------------->
-component ::= <component name=string> port? attribute* primitive</component>
+component ::= <component name=string> port? attribute* primitive </component>
 
 port ::= <port> inport* | outport* [| clientport | serverport] </port>
 
@@ -41,7 +39,6 @@ instance ::= <instance name=string componentRef=string parameters=string/>
 configport ::= <configport> inout [| clientserver] </configport>
 
 inout ::= <inout> setPort* | unsetPort* </inout>
-
 setPort ::= <setPort in=string out=string/>
 unsetPort ::= <unsetPort in=string (out=string)?/>
 
@@ -144,13 +141,13 @@ Array<Type> ::= {value1, value2, ...}
 
 
 <!----------------------------------------------------------------------------->
-<!-- un dataflow pur -->
+<!-- début d'un dataflow pur -->
 <!----------------------------------------------------------------------------->
 
 <!-- Un composant primitif est composé de -->
 component ::=
 <component name=string>
-  input output attributes* primitive
+  input output attribute* primitive
 </component>
 
 <!-- std::istream en local === pipeline '|'
@@ -168,7 +165,7 @@ input ::=
 </output>
 
 <!-- ? une liste d'arguments passés à la primitive ? -->
-<attributes>
+<attribute>
   <name>string</name>
   <type>string</type>
   (<set>string</set>)?
@@ -176,6 +173,7 @@ input ::=
 
 <!-- ? un executable #!/bin/bash, python, ... -->
 <primitive>
-  <signature>string</signature>
   <type>string</type>
+  <path>string</path>
+  <signature>string</signature>
 </primitive>
