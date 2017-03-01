@@ -1,18 +1,19 @@
-#ifndef SETPORT_H
-#define SETPORT_H
+#ifndef __UNSETPORT_H__
+#define __UNSETPORT_H__
 
 #include "InPort.h"
 #include "OutPort.h"
 
 
-class SetPort
+class UnSetPort
 {
 private:
 	string in;
 	string out;
 
 public:
+    SetPort(string in);
     SetPort(string in, string out);
 };
 
-#endif // SETPORT_H
+#endif
