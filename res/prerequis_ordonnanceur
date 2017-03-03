@@ -1,0 +1,42 @@
+TOUT CES PREREQUIS SONT VALABLE PRINCIPALEMENT POUR LA VERSION 1 ! 
+LES PREREQUIS SERONT A REDEFINIR POUR LES VERSION ULTERIEURE
+
+
+Note : on enléve les instructions du stmcassembly au fur et a mesure quelles sont exécutée pour des raisons de propreté et de sécurité, ainsi on s'assure qu'il ne peut pas avoir de confusion et que les instruction s'exécute une seule fois.
+
+NB : Pour le bloc séquence : créer un nouvel objet assembly a partir de celui existant et lancer un nouvel ordonnanceur en parralléle ne fonctionne pas a cause du partage des ressources qui cause un problème, ce n'est pas à faire la bonne pratique est donc de faire un while comme effectué sur le shéma.
+
+
+Tout d'abord chaque composant à un nom unique et chaque instance a un nom unique et un même composant n'a pas plusieurs port avec le même nom.
+
+Bien que cela ne soit pas précisé il est évident que des mutex seront a utilisé partout ou des objets sont partagé entre plusieurs thread de l'ordonnanceur.
+
+Code contenu de base dans l'ordonnanceur :
+
+- Tableaux :
+
+Pour chaque type que l'on accepte (String, int, boolean...) créer un hashmap.
+Lorsque l'ordonnanceur est un serveur et qu'on lui set une valeur on la range dans le hashmap du type correspondant sous la forme hashmap<String nomInstance <String nomPortOut>> .
+Ainsi lorsque l'ordonnanceur est en tant que client et qu'il veut set une valeur à une instance quand on regarde les configPort en recherchant sa présence il suffit lorsqu'on la trouve de prendre le nom de l'instance out et le nom du port out tout les deux présent dans la config et prendre la valeur dans le tableau.
+
+
+
+Code  a générer dans l'ordonnanceur :
+
+Lorsque l'ordonanceur est client :
+Il faut trouvé un moyen de pouvoir appeler les méthodes setIn_nomPort() pour tout les port In (pas besoin de précisé l'instance vu que l'appel s'effectue au travers d'un connection et que l'on sait a quelle instance correspond une connection, de plus un même thread ne sera jamais connecté a plusieurs composant en tant que client). Pour rappel ces méthodes doivent pouvoir être utilisé lors de l'initiation de l'instance par le port main ainsi que par les threads lorsqu'il recoive une valeur d'un port out.
+
+
+- Méthode setOut_nomComposant_nomPort() (lorsque l'ordonnanceur est serveur) cette méthode doit pouvoir être appelé a distance :
+Le thread main ne recevra JAMAIS d'appel sur cette méthode dans AUCUNE des différente version, en effet pour pouvoir differencié les instances on est obligé de créer des threads afin d'avoir une seule connection géré est déterminé a un thread afin de savoir quelle instance effectue cet appel afin de pouvoir effectuer les bonnes actions.
+
+Lors d'un appel sur cette méthode un seul thread est connecté au client qui l'appelle il s'agira donc forcément de lui qui prend l'appel en charge. 
+
+Cette méthode doit récupérer la valeur envoyé par l'instance, l'envoyé a toute les instance active qui on besoin de la valeur, stocker la valeur si jamais des instances non-encore créer en on besoin.
+
+
+
+
+NOTES IMPORTANTES : Lorsqu'on regarde dans le déclare / dans config port on doit vérfié de manière recursive si on est dans un sequence et tout les configPort et les declare qu'il faut potentiellement immbriquer
+
+ATTENTION : découpage en méthode trés important risque important de redondance entre l'instruction createInstance et execTask. Méthode avec de grosse similarité mais qui différe sur plusieurs points.
