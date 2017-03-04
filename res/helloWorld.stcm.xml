@@ -1,0 +1,65 @@
+<!-- UN ASSEMBLAGE EST L'ÉLEMENT D'ENTRÉE DE NOTRE FRAMEWORK -->
+<!-- C'EST LA DEFINITION EN INTENSION DE COMPOSANTS INTER-OPÉRABLES -->
+
+<!-- Cas de base : On à 2 instances à exécuter -->
+<stcmassembly>
+	<declare>
+		<instance name="server" componentRef="" path="/programs/Servers/HelloServer" parameters=""/>
+		<instance name="client" componentRef="" path="/programs/Clients/HelloClient" parameters=""/>
+	</declare>
+
+	<instruction>
+		<exectask nameInstance="server"/>
+		<exectask nameInstance="client"/>
+	</instruction>
+</stcmassembly>
+<!-- Problème 1 : manque la commande d'execution ? -->
+<!-- Stratégie d'ordonnancement : on lance des threads détachés et on termine notre execution ? -->
+
+
+
+<!-- Cas Liaison de Servers :
+On à 2 composants aux paths donnés
+InterfaceHello déclare une méthode sayHello() qui retourne une string
+InterfacePrinter déclare une méthode prenant en entrée une string
+On souhaite connecter ces deux composants -->
+<stcmassembly>
+	<declare>
+		<component name= "InterfaceHello">
+			<port>
+				<outport name="sayHello" type="string"/>
+			</port>
+			<primitive lang="c" signature=""/>
+		</component>
+
+		<component name= "InterfacePrinter">
+			<port>
+				<inport name="printString" type="string"/>
+			</port>
+			<primitive lang="c" signature=""/>
+		</component>
+
+		<instance name="serverHello" componentRef="InterfaceHello" path="/programs/Servers/HelloServer" parameters=""/>
+		<instance name="serverPrinter" componentRef="InterfacePrinter" path="/programs/Servers/PrinterServer" parameters=""/>
+
+		<configPort>
+			<inout>
+				<setPort in="serverHello.sayHello" out="serverPrinter.printString"/>
+			</inout>
+		</configPort>
+	</declare>
+
+	<instruction>
+		<exectask nameInstance="serverHello"/>
+		<exectask nameInstance="serverPrinter"/>
+	</instruction>
+</stcmassembly>
+<!-- Probleme 2 :
+? Signature dans primitive ?
+
+'inport' mettons 'type' le type de l'unique paramètre d'entrée , manque le type de retour ?
+'outport'mettons 'type' le type de retour, manque les paramètres pris par la méthodes ?
+
+Adam réponds que l'ordonnanceur se base sur les out pour terminer un composant
+et sur les in pour pouvoir démarrer un composant
+-->
