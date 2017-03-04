@@ -16,6 +16,14 @@ les [] correspondent aux ajouts prévus pour la V2
 
 ? le set=string dans inport
 ? expr dans cond
+
+    28 Février
+attribut 'path' de primitive dans instance puisque plusieurs implémentations d'un même
+composant possible
+
+? signature dans primitive ?
+? besoin ajout attribut 'command' ou alors on infère le mode d'execution en fonction de lang
+? set dans inport = les parametres de la methode ?
 ------------------------------------------------------------------------------->
 stcmassembly ::= <stcmassembly> declaration? instruction? </stcmassembly>
 <!----------------------------------------------------------------------------->
@@ -32,9 +40,9 @@ outport ::= <outport name=string type=string/>
 
 attribute ::= <attribute name=string type=string (set=string)?/>
 
-primitive ::= <primitive lang=string path=string signature=string/>
+primitive ::= <primitive lang=string signature=string/>
 <!----------------------------------------------------------------------------->
-instance ::= <instance name=string componentRef=string parameters=string/>
+instance ::= <instance name=string componentRef=string path=string parameters=string/>
 <!----------------------------------------------------------------------------->
 configport ::= <configport> inout [| clientserver] </configport>
 
