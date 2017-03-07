@@ -19,9 +19,23 @@
 /*
  *To use this file using gcc you can type
  *make
- *./testParser ../res/STCMAssemblys/helloWorld.STCMv0.xml
+ *./testParser yourfile.xml
  *NB: j'ai dû installer la librairie libxml2-dev
  */
+
+
+
+ static void print_element_attributes(xmlNode * a_node)
+ {
+   xmlAttr* attribute = a_node->properties;
+   while(attribute)
+   {
+     xmlChar* value = xmlNodeListGetString(a_node->doc, attribute->children, 1);
+     printf("Attribute name: %s, value : %s\n", attribute->name, value);
+     xmlFree(value);
+     attribute = attribute->next;
+   }
+ }
 
 /**
  * print_element_names:
@@ -30,13 +44,13 @@
  * Prints the names of the all the xml elements
  * that are siblings or children of a given xml node.
  */
-static void print_element_names(xmlNode * a_node)
-{
+static void print_element_names (xmlNode * a_node) {
     xmlNode *cur_node = NULL;
 
     for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
         if (cur_node->type == XML_ELEMENT_NODE) {
-            printf("node type: Element, name: %s\n", cur_node->name);
+            printf("Element name: %s\n", cur_node->name);
+            print_element_attributes(cur_node);
         }
 
         print_element_names(cur_node->children);
@@ -64,11 +78,15 @@ int main(int argc, char **argv)
      */
     LIBXML_TEST_VERSION
 
-    /*parse the file and get the DOM */
+    /*
+    * parse the file and get the DOM
+    * voir http://xmlsoft.org/html/libxml-parser.html#xmlReadFile
+    */
     doc = xmlReadFile(argv[1], NULL, 0);
 
     if (doc == NULL) {
         printf("error: could not parse file %s\n", argv[1]);
+        return(1);
     }
 
     /*Get the root element node */

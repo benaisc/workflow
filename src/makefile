@@ -4,10 +4,10 @@ MAIN = testParser
 
 all: $(MAIN)
 
-.o:$(SRC)
+treeParser_exemple.o:$(SRC)
 	$(CXX) -c $^ `xml2-config --cflags --libs` -o $@
 
-$(MAIN):.o
+$(MAIN):treeParser_exemple.o
 	$(CXX) $^ -lxml2 -o $@
 
 clean:
