@@ -16,7 +16,7 @@ Code contenu de base dans l'ordonnanceur :
 - Tableaux :
 
 Pour chaque type que l'on accepte (String, int, boolean...) créer un hashmap.
-Lorsque l'ordonnanceur est un serveur et qu'on lui set une valeur on la range dans le hashmap du type correspondant sous la forme hashmap<String nomInstance <String nomPortOut>> .
+Lorsque l'ordonnanceur est un serveur et qu'on lui set une valeur on la range dans le hashmap du type correspondant sous la forme hashmap<nomInstance, nomPortOut>.
 Ainsi lorsque l'ordonnanceur est en tant que client et qu'il veut set une valeur à une instance quand on regarde les configPort en recherchant sa présence il suffit lorsqu'on la trouve de prendre le nom de l'instance out et le nom du port out tout les deux présent dans la config et prendre la valeur dans le tableau.
 
 

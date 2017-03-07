@@ -12,6 +12,8 @@
 		<component name= "C1">
 			<dataOut name="outC1" type="string"/>
 			<!-- Attribute is optionnal we don't use it for this example-->
+			a la fin de son exécution, il effectue un outC1
+			comme y'à pas de dataIn, l'instance est obligée d'implémenter une méthode setVoid afin de démarrer; c'est notre ordonnanceur qui appelera cette methode en tant que client sur un serveur 
 		</component>
 
 		<!-- INSTANCE DECLARATION -->
@@ -22,7 +24,9 @@
 
 
 	<!-- UN STMCASSEMBLY NE POSSEDE QU'UNE SEULE INSTRUCTION DANS NOTRE CAS IL S'AGIRA SIMPLEMENT D'UN EXECTASK CAR UNE SEULE INSTANCE EST A INVOQUER -->
-	<exectask nameInstance="T1"/>
+	<instruction>	
+		<exectask nameInstance="T1"/>
+	</instuction>
 
 </assembly>
 
