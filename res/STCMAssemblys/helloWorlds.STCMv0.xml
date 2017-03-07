@@ -1,0 +1,57 @@
+<!-- 3 proofs of concepts, on imagine un composant qui affiche helloWorld -->
+
+<!-- Le premier exemple pour clarifier le mapping des port dans le declare -->
+<stcmassembly>
+	<declare>
+		<component name= "IHello">
+			<dataOut name="sayHello" type="string"/>
+		</component>
+
+		<instance name="clientHello" componentRef="IHello" path="/Clients/helloWorld" signature=""/>
+
+		<configPort>
+			<inout>
+				<setPort in="" out="clientHello.sayHello"/>
+			</inout>
+		</configPort>
+	</declare>
+	<!-- Pas d'instructions -->
+</stcmassembly>
+
+
+<!-- Les deux autres exemples pour determiner la différence subtile qu'elles
+	pourraient déceler -->
+<stcmassembly>
+	<declare>
+		<component name= "IHello">
+			<dataOut name="sayHello" type="string"/>
+		</component>
+
+		<instance name="clientHello" componentRef="IHello" path="/Clients/helloWorld" signature=""/>
+		<!-- Pas de configport -->
+	</declare>
+
+	<instruction>
+		<exectask nameInstance="clientHello"/>
+	</instuction>
+</stcmassembly>
+
+
+<stcmassembly>
+	<declare>
+		<component name= "IHello">
+			<dataOut name="sayHello" type="string"/>
+		</component>
+
+		<instance name="clientHello" componentRef="IHello" path="/Clients/helloWorld" signature=""/>
+		<!-- Pas de configport -->
+	</declare>
+
+	<instruction>
+		<configPort>
+			<inout>
+				<setPort in="" out="clientHello.sayHello"/>
+			</inout>
+		</configPort>
+	</instuction>
+</stcmassembly>
