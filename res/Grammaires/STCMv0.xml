@@ -1,0 +1,36 @@
+<!--
+Méthode de lecture d’un Assembly :
+On déclare les interfaces de composants (ports), leurs implémentations (instances) et le mapping à ordonnancer (configport) lors de l’execution d’instructions
+-->
+stcmassembly ::= <stcmassembly> declaration? instruction? </stcmassembly>
+
+declaration ::= <declare> component* instance* configport? </declare>
+
+component ::= <component name=string> port? attribute* </component>
+
+port ::= <port> inport* | outport* </port>
+inport ::= <inport name=string type=string (set=string)?/>
+outport ::= <outport name=string type=string/>
+
+attribute ::= <attribute name=string type=string (set=string)?/>
+
+instance ::= <instance name=string componentRef=string path=string signature=string/>
+
+configport ::= <configport> inout </configport>
+inout ::= <inout> setPort* | unsetPort* </inout>
+setPort ::= <setPort in=string out=string/>
+unsetPort ::= <unsetPort in=string (out=string)?/>
+
+instruction ::= <instruction> exectask|configport|parallel </instruction>
+
+parallel ::= <parallel> exectask+ </parallel>
+exectask ::= <exectask nameInstance=string/>
+
+
+<!---------- TYPES? ---------->
+null ::= null
+boolean ::= 'true' | 'false'
+string ::= "trivial"
+integer ::= [0-9]+
+numeric ::= [0-9]*\.[0-9]+
+Array<Type> ::= {value1, value2, ...}

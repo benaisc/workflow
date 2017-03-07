@@ -1,0 +1,21 @@
+﻿Pour interpréter le XML on à besoin des informations :
+
+<component> - Déclaration des interfaces (méthodes (ports)) à créer pour le contrôle des composants instanciables : inports pour les l’information (paramètre) attendus par leurs méthodes, et outport pour les méthodes donnant de l’information (valeur de retour) (donc maximum 1 outport par nom, et * inport par nom)
+création d’un squelette RPC par méthode ?
+
+<instance> - c’est la déclaration qui permettra d’instancier une boite noire, on supposera qu’elles implémentent l’interface de leur composantRef
+comment la référencer, la maintenir ?
+
+<configPort> - c’est l’ordonnancement qui permet le dataflow sous-jacent aux instructions
+v1 en local centralisé, donc un Main agissant comme client/serveur entre les méthodes squelettes
+
+<Instruction> - evaluation des instructions
+- cas : exectask -
+instanciation de composants
+	- path & cmd bash en local
+connexion des ports
+	- appel des methodes setPort in et envoi sur leurs setPort out
+déconnexion des ports ?
+destruction des instances ?
+
+
