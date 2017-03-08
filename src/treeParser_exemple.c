@@ -5,12 +5,10 @@
  * purpose: Parse a file to a tree, use xmlDocGetRootElement() to
  *          get the root element, then walk the document and print
  *          all the element name in document order.
- * usage: tree1 filename_or_URL
  * test: tree1 test2.xml > tree1.tmp && diff tree1.tmp $(srcdir)/tree1.res
  * author: Dodji Seketeli
  * copy: see Copyright for the status of this software.
  */
-#include <stdio.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
@@ -24,13 +22,13 @@
  */
 
 
-
  static void print_element_attributes(xmlNode * a_node)
  {
    xmlAttr* attribute = a_node->properties;
+   xmlChar* value;
    while(attribute)
    {
-     xmlChar* value = xmlNodeListGetString(a_node->doc, attribute->children, 1);
+     value = xmlNodeListGetString(a_node->doc, attribute->children, 1);
      printf("Attribute name: %s, value : %s\n", attribute->name, value);
      xmlFree(value);
      attribute = attribute->next;
