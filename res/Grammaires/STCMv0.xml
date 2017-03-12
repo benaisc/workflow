@@ -22,6 +22,6 @@ inout ::= <inout> setPort* | unsetPort* </inout>
 setPort ::= <setPort in=string out=string/>
 unsetPort ::= <unsetPort in=string (out=string)?/>
 
-instruction ::= <instruction> exectask|configport </instruction>
+instruction ::= <instruction> exectask </instruction>
 
 exectask ::= <exectask nameInstance=string/>
