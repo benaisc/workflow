@@ -13,16 +13,33 @@
 		<exectask nameInstance="clientHello"/>
 	</instuction>
 </stcmassembly>
+<!--
+		<declare>
+			<component>
+			chaque component est un type opaque au travers duquel les <instances> communiquent
+			via les ports <dataIn> et <dataOut> qui y sont déclarés
+			ici, pas de <configPort> donc pas d'orchestration de données
+		<instruction>
+			<exectask>
+			l'execution d'une tache est un petit algorithme qui suppose :
+			0) création d'un type opaque par component référencé
 
+			1) instancie le type opaque du componentRef
+			2) si dataIn, les attendre
+			3) demarrage de l'instance
+			4) si dataOut, les attendre
+			5) terminaison de l'instance
+			6) suppression du type opaque component
+-->
 
 <stcmassembly>
 	<declare>
 		<component name= "IReturnRandomNumbers">
-			<dataOut name="aNumber" type="real"/>
+			<dataOut name="aNumber" type="double"/>
 		</component>
 
 		<component name= "IUseRandomNumbers">
-			<dataIn name="aRandNumber" type="real"/>
+			<dataIn name="aRandNumber" type="double"/>
 		</component>
 
 		<instance name="producer" componentRef="IReturnRandomNumbers" path="/Servers/randomServer" signature="./launcher.sh"/>
@@ -45,20 +62,24 @@
 
 <!--
 <component> déclare un composant et ses ports
-permet à l'interpréteur de créer des structures permettant leur interaction
-TODO: à la lecture d'un component on doit créer un "bridge" par dataIn et par dataOut
+permet à l'interpréteur de créer des structures permettant les interactions entre les instances
+les interactions sont définies dans les configPort
+
+TODO: à la lecture d'un component on doit créer des "Types Opaques" depuis lesquels
+on communiquera avec les composants
 
 	<dataIn> - le nom et le type des informations attendues par le composant pour être démarré
-	<dataOut> ----------------------------------- renvoyées par le composant avant d'être détruit
+	<dataOut> ___________________________________ renvoyées par le composant avant d'être détruit
+	TODO: un "serverData" par dataIn et par dataOut
+
+	<instance> déclare l'implémentation d'un composant
+	TODO: un "refInstance" pour la référencer, la maintenir, et la connecter au serverData
 
 	<configPort> - c’est un dataflow sous-jacent aux instructions
-	TODO: local centralisé: un pipeline entre les bridges
+	TODO: local centralisé: un "pipeInOut" entre les serverData
 </component>
 
-<instance> déclare l'implémentation d'un composant
-TODO: comment la référencer, la maintenir, et la connecter au bridge ?
-
-<instruction> c'est le langage de programmation qui sera effectivement interprété et évalué comme :
+<instruction> c'est le langage de programmation qui sera effectivement interprété et évalué
 	<exectask> - execution d'une instance de composant
 	- le path : un path unix
 	- la signature : commande bash permettant l'instanciation du composant
@@ -68,72 +89,113 @@ TODO: comment la référencer, la maintenir, et la connecter au bridge ?
 ___________________________________________
 
 (ref)TODO: Actions et Stratégie charlesV1
+La difficultée est ici qu'on infère pas l'éxécution des composants directement grâce au mapping de ports (=== PETRI.net)
+mais on effectue quand meme un dataflow asynchrone aux instructions.
+Il faut trouver une stratégie "turing-complète" permettant une execution correcte
 
-dataOut -> il faut un bridgeIn capable de recevoir la donnée
-un bridgeIn est un serveur qui
+<dataOut> -> il faut un "serverDataIn" capable de recevoir la donnée
+un serverDataIn est un serveur qui
 - distribue une méthode publique DataOutName(dataOutType data)
 - attend son appel par une instance de composant
-- retourne la data à l'instance de pipeline appelante
-makeBridgeIn(SetPort in) (in=producer.aNumber qui est un dataOut)
+- retourne la data à l'instance de pipeInOut appelante
+serverDataIn makeServerDataIn(SetPort in) (in=producer.aNumber qui est un dataOut)
 
 
-dataIn -> il nous faut un bridgeOut capable de lui envoyer la donnée
-un bridgeOut est un serveur/client capable d'appeller une méthode dataIn publique d'une instance de composant
-algo bridgeOut:
+<dataIn> -> il faut un "serverDataOut" capable de lui envoyer la donnée
+un serverDataOut est un serveur/client capable d'appeller une méthode dataIn publique d'une instance de composant
+algo serverDataOut:
 - il distribue une methode publique set_dataInName(dataInType data)
 - set_dataInName invoque son port cible instanceName.dataInName(data)
-makeBridgeOut(SetPort out) (out=consummer.randNumber qui est un dataIn)
+serverDataOut makeserverDataOut(SetPort out) (out=consummer.randNumber qui est un dataIn)
 
 
-le pipeline réalise un mapping entre un dataOut et un dataIn de deux instances de composants via bridgeIn et brigdeOut;
-méthodes pipeline:
-- makePipeline(BridgeIn, BridgeOut) pipe entre BridgeOut(BridgeIn(dataOutType data))
+<configPort>
+le pipeInOut réalise le mapping entre les dataOut et les dataIn de deux instances de composants via serverDataIn et brigdeOut;
+sont intérêt réside dans le fait qu'un dataOut puisse être envoyé à de multiples dataIn
+- addpipeInOut(serverDataIn, serverDataOut) pipe entre serverDataOut(serverDataIn(dataOutType data))
 
 
-Il en ressort
-algo exectask:
+<exectask>:
 - vérifie l'existence du path et les droits d'execution du script bash de l'instanceName
 - vérifie l'existence d'un mapping cohérent
 	- cohérence du flux : in===dataOut et out===dataIn
 	- cohérence du type : in=instance.dataOutType === out=instance.dataInType
-- mapping entre les bridgesOut et les BridgesIn par l'instanciation de pipelines
-	- instancie un bridgeOut pour chaque dataIn de l'instanceName
-	- instancie un bridgeIn pour chaque dataOut de l'instanceName
-- attente de tous les bridgeOut à l'état prêt
+- mapping entre les serverDataOut et les serverDataIn par l'instanciation de pipeInOuts
+	- instancie un serverDataOut pour chaque dataIn de l'instanceName
+	- instancie un serverDataIn pour chaque dataOut de l'instanceName
+- attente de tous les serverDataOut à l'état prêt
 - execution du processus au path donné par la commande bash fournie en signature
-- attente de tous les bridgeIn à l'état prêt
+- attente de tous les serverDataIn à l'état prêt
 - arrêt du processus
 - fin exectask
 
-La difficultée est ici qu'on infère pas l'éxécution de composants directement grâce au mapping de ports (=== PETRI.net)
-mais on effectue quand meme un dataflow de manière asynchrone vis-à-vis de l'exécution des composants
-Il faut trouver une stratégie turing-complète permettant une execution correcte
-
+<sequence> est un "BUS" d'actions de gestion et
 1) Si le producteur est instancié avant:
-un pipeline est ouvert sur bridgeIn pour son dataOut
+un pipeInOut est ouvert sur serverDataIn pour son dataOut
 execution du processus et attente de la donnée envoyée par le producteur
-on doit ensuite attendre l'instanciation du consommateur de manière asynchrone pour pouvoir garantir l'envoi de la data au bridgeOut associé
+on doit ensuite attendre l'instanciation du consommateur de manière asynchrone pour pouvoir garantir l'envoi de la data au serverDataOut associé
 
 2) Si le consommateur est instancié avant:
-le pipeline ouvre un bridgeOut pour son dataIn et on reste bloqué puisque on
+le pipeInOut ouvre un serverDataOut pour son dataIn et on reste bloqué puisque on
 attend la dataIn avant d'instancier le composant, terminer son execution, et passer à l'instruction suivante
 Il faut pouvoir, dans le cas où une instance avec dataIn est instanciée alors que l'instanceName à laquelle
 elle est mappée n'est pas instanciée, passer l'instruction en "attente"
 
 ___________________________________________
-
+___________________________________________
 
 Un composant peut-être :
 - RPC est un concept general de Remote Procedure Call, et qui ne spécifie pas de protocole
 - RMI pour Remote Method Invocation, s'inspire de CORBA, typically use IIOP (Internet Inter-ORB Protocol)
-- un service web distribué : WSDL - typically uses SOAP or REST protocol
+- un WebService : WS - typically uses SOAP or REST protocol
 	- SOAP is a communication protocol (so somewhat comparable to IIOP). While it is the successor to XML-RPC, and usually used over HTTP (this over TCP/IP), it is actually transport-neutral, and can be done over other transports, such as SMTP.
 	- SOAP supports RPC, and indeed, early on, most SOAP-based services were RPC. Later, most of the industry switched to Document-based SOAP, where documents are transferred back and forth, rather than RPC.
 	- RESTful APIs stands for REpresentational State Transfer and is the typical means for web browsers to retrieve content from web servers
-
-Simple Object Access Protocol (SOAP) and XML-RPC are both RPC style SOA type systems.
-SOAP and XML-RPC rely on XML for carrying their payload between the client and the server and are frequently built upon HTTP, though other transports can also be used.
-Optimizations are available which attempt to reduce the burden of transmitting XML and there are versions of SOAP which use JSON, among other off shoots.
-Unlike RESTful services, which directly utilize HTTP headers, verbs and status codes, SOAP and XMP-RPC systems tunnel function calls through HTTP POST operations, missing out on the caching and system layering benefits found in RESTful services.
+- CORBA, J2EE EJB, OGM CCM, ...?
 
 -->
+
+stcmassembly{
+	declare{
+		component{
+			dataIn{}
+		}
+		component{
+			dataOut{}
+		}
+		instance{}
+		instance{}
+		configport{
+			port{
+				setPort{}
+			}
+		}
+	}
+	instruction{
+		sequence{
+			exectask{}
+			exectask{}
+		}
+	}
+}
+
+stcmassembly
+	declare
+		component
+			dataIn
+
+		component
+			dataOut
+
+		instance
+		instance
+		configport
+			port
+				setPort
+
+
+
+	instruction
+		sequence
+			exectask
+			exectask

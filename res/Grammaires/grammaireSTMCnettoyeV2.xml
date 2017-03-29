@@ -1,4 +1,4 @@
- component ::=
+component ::=
 <component name=string (extends=string)?>
   port* [attribute*] primitive
 </component>
@@ -11,7 +11,7 @@ serverport ::= <serverPort name=string type=string/>]
 inport ::= <dataIn name=string type=string/>
 outport ::= <dataOut name=string type=string/>
 
-attribute ::= <attribute name=string type=string (set=string)?/>
+[ attribute ::= <attribute name=string type=string (set=string)?/> ]
 
 content ::= primitive [| composite]
 primitive ::= <impl type=string signature=string/>
