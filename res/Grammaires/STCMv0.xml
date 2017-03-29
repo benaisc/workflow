@@ -22,6 +22,13 @@ inout ::= <inout> setPort* | unsetPort* </inout>
 setPort ::= <setPort in=string out=string/>
 unsetPort ::= <unsetPort in=string (out=string)?/>
 
-instruction ::= <instruction> exectask </instruction>
+instruction ::= <instruction> sequence|exectask|createInstance </instruction>
+
+sequence ::=
+<sequence name=string>
+  port* attribute* declaration instruction+
+</sequence>
+
+createInstance ::= <createInstance name=string componentRef=string PATH=string signature=string/>
 
 exectask ::= <exectask nameInstance=string/>
