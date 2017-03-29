@@ -1,29 +1,30 @@
+
+stcmassembly ::= declaration? instruction?
+
+declaration ::= <declare> component* instance* configport* </declare>
+
 component ::=
 <component name=string (extends=string)?>
   port* attribute* content? membrane?
 </component>
 
 port ::= clientport | serverport | inport | outport
-
 clientport ::= <clientPort name=string type=string (set=string)?/>
 serverport ::= <serverPort name=string type=string/>
-
 inport ::= <dataIn name=string type=string (set=string)?/>
 outport ::= <dataOut name=string type=string/>
 
 attribute ::= <attribute name=string type=string (set=string)?/>
 
-membrane ::= <controllerDesc desc=string/>
-
 content ::= primitive | composite
-
 primitive ::= <impl type=string signature=string/>
-
 composite ::= <body> stcmassembly </body>
 
-stcmassembly ::= declaration? instruction?
+membrane ::= <controllerDesc desc=string/>
 
-declaration ::= <declare> component* instance* configport* </declare>
+instruction ::=
+instance | executetask | configport | seq | if | switch | parallel |
+while|for|forEach|dag|parallelFor|parallelForEach
 
 instance ::=
 <instance name=string componentRef=string>
@@ -31,16 +32,10 @@ instance ::=
 </instance>
 
 configport ::= clientserver | inout
-
 clientserver ::= <setPort client=string server=string/>
-| <unsetPort client=string (server=string)?/>
-
+                 <unsetPort client=string (server=string)?/>
 inout ::= <setPort in=string out=string/>
-| <unsetPort in=string (out=string)?/>
-
-instruction ::=
-instance | executetask | configport | seq | if | switch | parallel |
-while|for|forEach|dag|parallelFor|parallelForEach
+          <unsetPort in=string (out=string)?/>
 
 executetask ::= <exectask nameInstance=string/>
 
