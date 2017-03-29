@@ -12,6 +12,8 @@ private:
 
 public:
     Instruction();
+	
+	Sequence getSequence();
 };
 
 #endif
