@@ -1,6 +1,6 @@
 /*! \file STCMAssembly.h
     \brief A Parser used to query STCM-XML's.
-    
+
     Simply built on libxml2 to reduce dependencys.
 */
 
@@ -9,12 +9,15 @@
 
 #include <libxml2>
 #include <iostream>
+#include "Declare.h"
+#include "Instruction.h"
 
 /*! \class STCMAssembly
     \brief Template for base STCMAssembly class.
 
     It contains the prerequisite functions used to
-	fill an STCMAssembly object from an STCM-XML file.
+		fill and manipulate STCMAssembly object parsed
+		from an STCM-XML file.
 */
 class STCMAssembly{
 	private:
@@ -28,14 +31,16 @@ class STCMAssembly{
 		STCMAssembly();
 
 		/*! \fn parse(FILE* stcmXml)
-			\brief Constructor from a file
+			\brief Construct from a file
 			\param stcmXml A pointer to the STCMAssembly XML
 			\return A filled STCMAssembly object or NULL.
 		*/
 		STCMAssembly* parse(FILE* stcmXmlPath);
-		
-		Declare getDeclare();
-		Instruction getInstruction();		
+
+		Declare* getDeclarations();
+		Instruction* getInstructions();
+
+		void print();
 };
 
 #endif

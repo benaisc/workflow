@@ -4,7 +4,7 @@
 #include <string>
 
 
-class Port
+virtual class Port
 {
 protected:
     string name;
@@ -12,6 +12,8 @@ protected:
 
 public:
 	explicit Port(string name, string type);
+
+  void print();
 };
 
 #endif // PORT_H

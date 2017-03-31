@@ -1,19 +1,21 @@
 #include "STCMAssembly.h"
 
 
-STCMAssembly::STCMAssembly(){
-	this.declarations = new Declare();
-	this.instructions = new Instruction();
-}
+STCMAssembly::STCMAssembly(){}
 
 STCMAssembly* STCMAssembly::parse(FILE* stcmXmlPath){
 	//TODO
 }
 
-Declare STCMAssembly::getDeclare(){
+Declare* STCMAssembly::getDeclarations(){
 	//TODO
 }
 
-Instruction STCMAssembly::getInstruction(){
+Instruction* STCMAssembly::getInstructions(){
 	//TODO
+}
+
+void STCMAssembly::print(){
+	declarations.print();
+	instructions.print();
 }

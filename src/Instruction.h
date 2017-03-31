@@ -2,18 +2,19 @@
 #define __INSTRUCTION_H__
 
 
-class Instruction
+virtual class Instruction
 {
 private:
-    CreateInstance createInstance;
-	ExecTask execTask;
-	ConfigPort configPort;
-	Sequence sequence;
 
 public:
     Instruction();
-	
-	Sequence getSequence();
+
+    void print();
+
+    //Ici on déclare les méthodes virtuelles
+    //les méthodes qui permettront de manipuler
+    //nos instructions indépendemment de leur types
+    virtual void foo();
 };
 
 #endif

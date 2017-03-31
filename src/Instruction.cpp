@@ -1,9 +1,8 @@
 #include "Instruction.h"
 
-Instruction::Instruction() : createInstance(), execTask(), configPort(), sequence() {}
+Instruction::Instruction(){}
 
 
-Sequence Instruction::getSequence(){
-	return this.sequence;
+void Instruction::print(){
+	return this.printer();
 }
-

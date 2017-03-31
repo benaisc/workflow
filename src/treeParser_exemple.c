@@ -56,6 +56,68 @@ static void print_element_names (xmlNode * a_node) {
 }
 
 
+/*
+static void parse_element_attributes(xmlNode * a_node)
+{
+  xmlAttr* attribute = a_node->properties;
+  xmlChar* value;
+  while(attribute)
+  {
+    value = xmlNodeListGetString(a_node->doc, attribute->children, 1);
+    printf("Attribute name: %s, value : %s\n", attribute->name, value);
+    xmlFree(value);
+    attribute = attribute->next;
+  }
+}
+static void parse_declaration (xmlNode * a_node) {
+    xmlNode *cur_node = NULL;
+
+    for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
+        if (cur_node->type == XML_ELEMENT_NODE) {
+            printf("Element name: %s\n", cur_node->name);
+            //print_element_attributes(cur_node);
+            switch (cur_node->name) {
+              case "component":
+                //TODO: crée l'objet component avec ses dataIn et dataOut
+                break;
+              case "instance":
+                //TODO: crée l'objet instance avec ses attributs
+                break;
+              case "configport":
+                //TODO: crée l'objet configPort, son inout et ses setPorts
+                break;
+              default:
+                std::cout << cur_node->name << " pas pris en charge !" << '\n';
+            }
+        }
+        parse_element_names(cur_node->children);
+    }
+}
+static STCMAssembly parse_stcm (xmlNode * a_node) {
+    STCMAssembly stcmassembly;
+    xmlNode *cur_node = NULL;
+
+    for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
+        if (cur_node->type == XML_ELEMENT_NODE) {
+            printf("Element name: %s\n", cur_node->name);
+            //print_element_attributes(cur_node);
+            switch (cur_node->name) {
+              case "declare":
+                //TODO: crée l'objet component avec ses dataIn et dataOut
+                parse_declaration(cur_node);
+                break;
+              //case "instruction":
+                //TODO: crée l'objet instance avec ses attributs
+                //break;
+              default:
+                std::cout << cur_node->name << " pas pris en charge !" << '\n';
+            }
+        }
+    }
+
+    return stcmassembly;
+}
+*/
 /**
  * Simple example to parse a file called "file.xml",
  * walk down the DOM, and print the name of the
@@ -79,6 +141,7 @@ int main(int argc, char **argv)
     /*
     * parse the file and get the DOM
     * voir http://xmlsoft.org/html/libxml-parser.html#xmlReadFile
+    * ici, on le SUPPOSE bien-formé
     */
     doc = xmlReadFile(argv[1], NULL, 0);
 

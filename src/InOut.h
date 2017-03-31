@@ -6,7 +6,7 @@ class InOut
 {
 private:
     SetPort* setPorts;
-	UnSetPort* unsetPorts
+    UnSetPort* unsetPorts
 
 public:
     InOut();
