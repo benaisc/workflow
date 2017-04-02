@@ -1,218 +1,160 @@
-/**
- * source: http://xmlsoft.org/
- * section: Tree
- * synopsis: Navigates a tree to print element names
- * purpose: Parse a file to a tree, use xmlDocGetRootElement() to
- *          get the root element, then walk the document and print
- *          all the element name in document order.
- * test: tree1 test2.xml > tree1.tmp && diff tree1.tmp $(srcdir)/tree1.res
- * author: Dodji Seketeli
- * copy: see Copyright for the status of this software.
- */
 #include <libxml/parser.h>
 #include <libxml/tree.h>
-
+#include <string.h>
 #ifdef LIBXML_TREE_ENABLED
+//#include "STCMAssembly.h"
 
-/*
- *To use this file using gcc you can type
- *make
- *./testParser yourfile.xml
- *NB: j'ai dû installer la librairie libxml2-dev
- */
+//static void parse_component (xmlNode * a_node, Component c) {
+static void parse_component (xmlNode * a_node) {
+  xmlNode *cur_node = NULL;
 
+  for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
+    if (cur_node->type == XML_ELEMENT_NODE) {
 
- static void print_element_attributes(xmlNode * a_node)
- {
-   xmlAttr* attribute = a_node->properties;
-   xmlChar* value;
-   while(attribute)
-   {
-     value = xmlNodeListGetString(a_node->doc, attribute->children, 1);
-     printf("Attribute name: %s, value : %s\n", attribute->name, value);
-     xmlFree(value);
-     attribute = attribute->next;
-   }
- }
-
-/**
- * print_element_names:
- * @a_node: the initial xml node to consider.
- *
- * Prints the names of the all the xml elements
- * that are siblings or children of a given xml node.
- */
-static void print_element_names (xmlNode * a_node) {
-    xmlNode *cur_node = NULL;
-
-    for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
-        if (cur_node->type == XML_ELEMENT_NODE) {
-            printf("Element name: %s\n", cur_node->name);
-            print_element_attributes(cur_node);
+      if (strcmp(cur_node->name, "dataIn") == 0){
+        xmlAttr* attribute = cur_node->properties;
+        //récupère la valeur des attributs nom et type
+        xmlChar* name;
+        name = xmlNodeListGetString(cur_node->doc, attribute->children, 1);
+        attribute = attribute->next;
+        xmlChar* type;
+        type = xmlNodeListGetString(cur_node->doc, attribute->children, 1);
+        attribute = attribute->next;
+        if(attribute){
+          xmlChar* set;
+          set = xmlNodeListGetString(cur_node->doc, attribute->children, 1);
+          //c.addInPort(new InPort(name, type, set));
+          printf("dataIn name= %s, type= %s, set=%s\n", name, type, set);
+          xmlFree(set);
+        }
+        else{
+          //c.addInPort(new InPort(name, type));
+          printf("dataIn name= %s, type= %s\n", name, type);
         }
 
-        print_element_names(cur_node->children);
+        xmlFree(name);
+        xmlFree(type);
+      }
+
+      else if (strcmp(cur_node->name, "dataOut") == 0){
+        xmlAttr* attribute = cur_node->properties;
+        xmlChar* name;
+        name = xmlNodeListGetString(cur_node->doc, attribute->children, 1);
+        attribute = attribute->next;
+        xmlChar* type;
+        type = xmlNodeListGetString(cur_node->doc, attribute->children, 1);
+
+        //c.addOutPort(new OutPort(name, type));
+        printf("dataOut name = %s, type = %s\n", name, type);
+
+        xmlFree(name);
+        xmlFree(type);
+      }
+
+      else{
+        //printf("#parse_component: Noeuds '%s' pas pris en charge !\n", cur_node->name);
+        printf("\n");
+      }
     }
-}
-
-
-
-static void parse_element_attributes(xmlNode * a_node)
-{
-  xmlAttr* attribute = a_node->properties;
-  xmlChar* value;
-  while(attribute)
-  {
-    value = xmlNodeListGetString(a_node->doc, attribute->children, 1);
-    printf("Attribute name: %s, value : %s\n", attribute->name, value);
-    xmlFree(value);
-    attribute = attribute->next;
   }
 }
-static Component parse_component (xmlNode * a_node) {
-    Component c;
-    xmlNode *cur_node = NULL;
 
-    for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
-        if (cur_node->type == XML_ELEMENT_NODE) {
-            //printf("Element name: %s\n", cur_node->name);
-            //print_element_attributes(cur_node);
+//static void parse_declaration (xmlNode * a_node, STCMAssembly assembly) {
+static void parse_declaration (xmlNode * a_node) {
+  xmlNode *cur_node = NULL;
 
-            xmlAttr* attribute = a_node->properties;
-            xmlChar* name;
-            name = xmlNodeListGetString(a_node->doc, attribute->children, 1);
-            //printf("Attribute name: %s, name : %s\n", attribute->name, name);
-            attribute = attribute->next;
-            xmlChar* type;
-            type = xmlNodeListGetString(a_node->doc, attribute->children, 1);
-            //printf("Attribute name: %s, type : %s\n", attribute->name, type);
+  for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
+    if (cur_node && cur_node->type == XML_ELEMENT_NODE) {
+      if (strcmp(cur_node->name, "component") == 0){
+        //on récupère son nom
+        xmlAttr* attribute = cur_node->properties;
+        xmlChar* name;
+        name = xmlNodeListGetString(cur_node->doc, attribute->children, 1);
+        //on crée l'objet
+        //Component c = Component(name);
+        printf("Component name = %s\n", name);
+        //parse l'objet component (ses ports dataIn et dataOut)
+        //parse_component(cur_node, &c);
+        parse_component(cur_node->children);
+        //assembly.addComponent(&c);
 
-            switch (cur_node->name) {
-              case "dataIn":
-                attribute = attribute->next;
-                if(attribute){
-                  xmlChar* set;
-                  set = xmlNodeListGetString(a_node->doc, attribute->children, 1);
-                  c.addInPort(new InPort(name, type, set));
-                  xmlFree(set);
-                }
-                else{
-                  c.addInPort(new InPort(name, type));
-                }
-                break;
-              case "dataOut":
-                c.addOutPort(new OutPort(name, type));
-                break;
-              default:
-                std::cout << cur_node->name << " pas pris en charge !" << '\n';
-            }
-            xmlFree(value);
-            xmlFree(type);
-        }
+        xmlFree(name);
+      }
+      //case "instance":
+      //TODO: crée l'objet instance avec ses attributs
+      //break;
+      //case "configport":
+      //TODO: crée l'objet configPort, son inout et ses setPorts
+      //break;
+      else{
+        //printf("#parse_declaration: Noeuds '%s' pas pris en charge !\n", cur_node->name);
+        printf("\n");
+      }
     }
-    return c;
-}
-static void parse_declaration (xmlNode * a_node, STCMAssembly assembly) {
-    xmlNode *cur_node = NULL;
-
-    for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
-        if (cur_node->type == XML_ELEMENT_NODE) {
-            //printf("Element name: %s\n", cur_node->name);
-            //print_element_attributes(cur_node);
-            switch (cur_node->name) {
-              case "component":
-                //TODO: crée l'objet component avec ses dataIn et dataOut
-                assembly.addComponent(parse_component(cur_node));
-                break;
-              case "instance":
-                //TODO: crée l'objet instance avec ses attributs
-                break;
-              case "configport":
-                //TODO: crée l'objet configPort, son inout et ses setPorts
-                break;
-              default:
-                std::cout << cur_node->name << " pas pris en charge !" << '\n';
-            }
-        }
-        parse_declaration(cur_node->children, &assembly);
-    }
-}
-static STCMAssembly parse_stcm (xmlNode * a_node) {
-    STCMAssembly stcmassembly;
-    xmlNode *cur_node = NULL;
-
-    for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
-        if (cur_node->type == XML_ELEMENT_NODE) {
-            printf("Element name: %s\n", cur_node->name);
-            //print_element_attributes(cur_node, &stcmassembly);
-            switch (cur_node->name) {
-              case "declare":
-                //TODO: crée l'objet component avec ses dataIn et dataOut
-                parse_declaration(cur_node, &stcmassembly);
-                break;
-              //case "instruction":
-                //TODO: crée l'objet instruction avec ses attributs
-                //break;
-              default:
-                std::cout << cur_node->name << " pas pris en charge !" << '\n';
-            }
-        }
-    }
-
-    return stcmassembly;
+    //parse_declaration(cur_node->children, &assembly);
+    parse_declaration(cur_node->children);
+  }
 }
 
-/**
- * Simple example to parse a file called "file.xml",
- * walk down the DOM, and print the name of the
- * xml elements nodes.
- */
+//static void parse_stcm (xmlNode * a_node, STCMAssembly stcmassembly) {
+static void parse_stcm (xmlNode * a_node) {
+  xmlNode *cur_node = NULL;
+
+  for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
+    if (cur_node->type == XML_ELEMENT_NODE) {
+
+      if (strcmp(cur_node->name, "declare") == 0){
+        //crée l'objet component avec ses dataIn et dataOut
+        //parse_declaration(cur_node, &stcmassembly);
+        parse_declaration(cur_node);
+      }
+      //case "instruction":
+      //TODO: crée l'objet instruction avec ses attributs
+      //break;
+      else{
+        //printf("#parse_stcm: Noeuds '%s' pas pris en charge !\n", cur_node->name);
+        printf("\n");
+      }
+    }
+    //parse_stcm(cur_node->children, &stcmassembly);
+    parse_stcm(cur_node->children);
+  }
+}
+
+
 int main(int argc, char **argv)
 {
-    xmlDoc *doc = NULL;
-    xmlNode *root_element = NULL;
+  xmlDoc *doc = NULL;
+  xmlNode *root_element = NULL;
 
-    if (argc != 2)
-        return(1);
+  if (argc != 2)
+  return(1);
 
-    /*
-     * this initialize the library and check potential ABI mismatches
-     * between the version it was compiled for and the actual shared
-     * library used.
-     */
-    LIBXML_TEST_VERSION
+  LIBXML_TEST_VERSION
 
-    /*
-    * parse the file and get the DOM
-    * voir http://xmlsoft.org/html/libxml-parser.html#xmlReadFile
-    * ici, on le SUPPOSE bien-formé
-    */
-    doc = xmlReadFile(argv[1], NULL, 0);
+  doc = xmlReadFile(argv[1], NULL, 0);
 
-    if (doc == NULL) {
-        printf("error: could not parse file %s\n", argv[1]);
-        return(1);
-    }
+  if (doc == NULL) {
+    printf("error: could not parse file %s\n", argv[1]);
+    return(1);
+  }
 
-    /*Get the root element node */
-    root_element = xmlDocGetRootElement(doc);
+  /*Get the root element node */
+  root_element = xmlDocGetRootElement(doc);
 
-    print_element_names(root_element);
+  //STCMAssembly assembly;
+  //parse_stcm(root_element, &assembly);
+  parse_stcm(root_element);
 
-    /*free the document */
-    xmlFreeDoc(doc);
+  //assembly.wiggle();
 
-    /*
-     *Free the global variables that may
-     *have been allocated by the parser.
-     */
-    xmlCleanupParser();
-
-    return 0;
+  xmlFreeDoc(doc);
+  xmlCleanupParser();
+  return 0;
 }
 #else
 int main(void) {
-    fprintf(stderr, "Tree support not compiled in\n");
-    exit(1);
+  fprintf(stderr, "Tree support not compiled in\n");
+  exit(1);
 }
 #endif
