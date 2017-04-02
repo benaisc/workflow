@@ -40,7 +40,8 @@ class STCMAssembly{
 		Declare* getDeclarations();
 		Instruction* getInstructions();
 
-		void print();
+		void print(std::ostream& os);
 };
+std::ostream &operator<<(std::ostream& os, const STCMAssembly &STCM);
 
 #endif

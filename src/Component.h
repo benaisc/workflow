@@ -3,20 +3,21 @@
 
 #include "OutPort.h"
 #include "InPort.h"
-
+#include <list>
 
 class Component{
 	private:
 		string name;		//attribut
-		InPort* inports;		//aggrégation : hashmap ?
-		OutPort* outports;	//aggrégation
+		std::list<InPort> inports;		//aggrégation : liste ?
+		std::list<OutPort> outports;	//aggrégation
 		//Attribute* attributes; //aggrégation
 
 	public:
-		bool addOutPort(OutPort outp);
-		bool addInPort(InPort inp);
-		OutPort* getOutPorts() const;
-		InPort* getInPorts() const;
+		Component(string name);
+		void addOutPort(OutPort outp);
+		void addInPort(InPort inp);
+		std::list<OutPort>* getOutPorts() const;
+		std::list<InPort>* getInPorts() const;
 		//bool addAttribute(Attribute attr);
 		//Attribute getAttributes() const;
 

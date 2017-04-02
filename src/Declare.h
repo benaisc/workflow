@@ -27,7 +27,7 @@ public:
 		Component* searchComponent(std::string name);
 		Instance* searchInstance(std::string name);
 
-		void print();
+		void print(std::ostream& os);
 };
 
 #endif

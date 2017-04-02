@@ -15,7 +15,13 @@ Instruction* STCMAssembly::getInstructions(){
 	//TODO
 }
 
-void STCMAssembly::print(){
-	declarations.print();
-	instructions.print();
+std::ostream &operator<<(std::ostream& os, const STCMAssembly &STCM)
+{
+  STCM.print(os);
+  return os;
+}
+
+void STCMAssembly::print(std::ostream &os){
+	declarations.print(&os);
+	instructions.print(&os);
 }

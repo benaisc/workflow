@@ -45,8 +45,8 @@ Instance* Declare::searchInstance(std::string name){
 	}
 }
 
-void Declare::print(){
+void Declare::print(std::ostream& os){
 	//foreach(Component c : this.components){c.print();}
 	//foreach(Instance i : this.instances){i.print();}
-	configPort.print();
+	configPort.print(&os);
 }

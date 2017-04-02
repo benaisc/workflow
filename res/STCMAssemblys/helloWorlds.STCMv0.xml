@@ -34,7 +34,7 @@
 
 <stcmassembly>
 	<declare>
-		<component name= "IReturnRandomNumbers">
+		<component name="IReturnRandomNumbers">
 			<dataOut name="aNumber" type="double"/>
 		</component>
 
@@ -46,9 +46,9 @@
 		<instance name="consummer" componentRef="IUseRandomNumbers" path="/Clients/randomClient" signature="./launcher.sh"/>
 
 		<configport>
-			<port>
+			<inout>
 				<setPort in="producer.aNumber" out="consummer.randNumber"/>
-			</port>
+			</inout>
 		</configport>
 	</declare>
 
@@ -155,47 +155,54 @@ Un composant peut-être :
 
 -->
 
-stcmassembly{
-	declare{
-		component{
-			dataIn{}
+<!-- En JSON -->
+{
+	"stcmassembly": {
+		"declare": {
+			"component": [
+				{
+					"name": "IReturnRandomNumbers",
+					"dataOut": [
+						{ "name": "aNumber", "type": "double" }
+					]
+				},
+				{
+					"name": "IUseRandomNumbers",
+					"dataIn": [
+						{ "name": "aRandNumber", "type": "double" }
+					]
+				}
+			]
+
+			"instance": [
+				{
+					"name": "producer",
+					"componentRef": "IReturnRandomNumbers",
+					"path": "/Servers/randomServer",
+					"signature": "./launcher.sh"
+				},
+				{
+					"name": "consummer",
+					"componentRef": "IUseRandomNumbers",
+					"path": "/Clients/randomClient",
+					"signature": "./launcher.sh"
+				}
+			]
+
+			"configport": {
+				"inout": {
+					"setPort": [
+						{ "in": "producer.aNumber", "out": "consummer.aRandNumber" }
+					]
+				}
+			}
 		}
-		component{
-			dataOut{}
-		}
-		instance{}
-		instance{}
-		configport{
-			port{
-				setPort{}
+
+		"instruction": {
+			"sequence": {
+				"exectask": {"name": "producer"}
+				"exectask": {"name": "consummer"}
 			}
 		}
 	}
-	instruction{
-		sequence{
-			exectask{}
-			exectask{}
-		}
-	}
 }
-
-stcmassembly
-	declare
-		component
-			dataIn
-
-		component
-			dataOut
-
-		instance
-		instance
-		configport
-			port
-				setPort
-
-
-
-	instruction
-		sequence
-			exectask
-			exectask

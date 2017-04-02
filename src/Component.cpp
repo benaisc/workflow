@@ -1,24 +1,26 @@
 #include "Component.h"
 
 
-Component::Component(){}
+Component::Component(string nameAttr) : name(nameAttr){}
 
-bool Component::addOutPort(OutPort outp){
-
+void Component::addOutPort(OutPort outp){
+  this.outports.push_front(outp);
 }
 
-bool Component::addInPort(InPort inp){
-
+void Component::addInPort(InPort inp){
+  this.inports.push_front(inp);
 }
 
-OutPort* Component::getOutPorts() const{
-
+std::list<OutPort>* Component::getOutPorts() const{
+  return &this.outports;
 }
 
-InPort* Component::getInPorts() const{
-
+std::list<InPort>* Component::getInPorts() const{
+  return &this.inports;
 }
 
 void Component::print(){
-  
+  std::cout << "Composant '" << this.name << "' : \n";
+  this.inports.print();
+  this.outports.print();
 }

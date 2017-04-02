@@ -56,7 +56,7 @@ static void print_element_names (xmlNode * a_node) {
 }
 
 
-/*
+
 static void parse_element_attributes(xmlNode * a_node)
 {
   xmlAttr* attribute = a_node->properties;
@@ -69,16 +69,60 @@ static void parse_element_attributes(xmlNode * a_node)
     attribute = attribute->next;
   }
 }
-static void parse_declaration (xmlNode * a_node) {
+static Component parse_component (xmlNode * a_node) {
+    Component c;
     xmlNode *cur_node = NULL;
 
     for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
         if (cur_node->type == XML_ELEMENT_NODE) {
-            printf("Element name: %s\n", cur_node->name);
+            //printf("Element name: %s\n", cur_node->name);
+            //print_element_attributes(cur_node);
+
+            xmlAttr* attribute = a_node->properties;
+            xmlChar* name;
+            name = xmlNodeListGetString(a_node->doc, attribute->children, 1);
+            //printf("Attribute name: %s, name : %s\n", attribute->name, name);
+            attribute = attribute->next;
+            xmlChar* type;
+            type = xmlNodeListGetString(a_node->doc, attribute->children, 1);
+            //printf("Attribute name: %s, type : %s\n", attribute->name, type);
+
+            switch (cur_node->name) {
+              case "dataIn":
+                attribute = attribute->next;
+                if(attribute){
+                  xmlChar* set;
+                  set = xmlNodeListGetString(a_node->doc, attribute->children, 1);
+                  c.addInPort(new InPort(name, type, set));
+                  xmlFree(set);
+                }
+                else{
+                  c.addInPort(new InPort(name, type));
+                }
+                break;
+              case "dataOut":
+                c.addOutPort(new OutPort(name, type));
+                break;
+              default:
+                std::cout << cur_node->name << " pas pris en charge !" << '\n';
+            }
+            xmlFree(value);
+            xmlFree(type);
+        }
+    }
+    return c;
+}
+static void parse_declaration (xmlNode * a_node, STCMAssembly assembly) {
+    xmlNode *cur_node = NULL;
+
+    for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
+        if (cur_node->type == XML_ELEMENT_NODE) {
+            //printf("Element name: %s\n", cur_node->name);
             //print_element_attributes(cur_node);
             switch (cur_node->name) {
               case "component":
                 //TODO: crée l'objet component avec ses dataIn et dataOut
+                assembly.addComponent(parse_component(cur_node));
                 break;
               case "instance":
                 //TODO: crée l'objet instance avec ses attributs
@@ -90,7 +134,7 @@ static void parse_declaration (xmlNode * a_node) {
                 std::cout << cur_node->name << " pas pris en charge !" << '\n';
             }
         }
-        parse_element_names(cur_node->children);
+        parse_declaration(cur_node->children, &assembly);
     }
 }
 static STCMAssembly parse_stcm (xmlNode * a_node) {
@@ -100,14 +144,14 @@ static STCMAssembly parse_stcm (xmlNode * a_node) {
     for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
         if (cur_node->type == XML_ELEMENT_NODE) {
             printf("Element name: %s\n", cur_node->name);
-            //print_element_attributes(cur_node);
+            //print_element_attributes(cur_node, &stcmassembly);
             switch (cur_node->name) {
               case "declare":
                 //TODO: crée l'objet component avec ses dataIn et dataOut
-                parse_declaration(cur_node);
+                parse_declaration(cur_node, &stcmassembly);
                 break;
               //case "instruction":
-                //TODO: crée l'objet instance avec ses attributs
+                //TODO: crée l'objet instruction avec ses attributs
                 //break;
               default:
                 std::cout << cur_node->name << " pas pris en charge !" << '\n';
@@ -117,7 +161,7 @@ static STCMAssembly parse_stcm (xmlNode * a_node) {
 
     return stcmassembly;
 }
-*/
+
 /**
  * Simple example to parse a file called "file.xml",
  * walk down the DOM, and print the name of the
