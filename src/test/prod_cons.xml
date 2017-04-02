@@ -1,0 +1,11 @@
+<stcmassembly>
+	<declare>
+		<component name="IReturnRandomNumbers">
+			<dataOut name="aNumber" type="double"/>
+		</component>
+
+		<component name= "IUseRandomNumbers">
+			<dataIn name="aRandNumber" type="double"/>
+		</component>
+	</declare>
+</stcmassembly>

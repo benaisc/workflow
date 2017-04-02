@@ -1,14 +1,14 @@
-CXX = gcc
-SRC = xmlGetter.c
-MAIN = XMLGETTER
+CXX = g++ -std=c++0x
+SRC = domGetter.c
+MAIN = DOMGETTER
 
 all: $(MAIN)
 
-xmlGetter.o:$(SRC)
-	$(CXX) -c $^ `xml2-config --cflags --libs` -o $@
+domGetter.o:$(SRC)
+	$(CXX) -std=C++11 -c $^ `xml2-config --cflags --libs` -o $@
 
-$(MAIN):treeParser_exemple.o
+$(MAIN):domGetter.o
 	$(CXX) $^ -lxml2 -o $@
 
 clean:
-	rm xmlGetter.o $(MAIN)
+	rm domGetter.o $(MAIN)
