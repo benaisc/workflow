@@ -11,7 +11,7 @@
 
 	<instruction>
 		<exectask nameInstance="clientHello"/>
-	</instuction>
+	</instruction>
 </stcmassembly>
 <!--
 		<declare>
@@ -57,7 +57,7 @@
 			<exectask nameInstance="producer"/>
 			<exectask nameInstance="consummer"/>
 		</sequence>
-	</instuction>
+	</instruction>
 </stcmassembly>
 
 <!--
