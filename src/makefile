@@ -1,14 +1,15 @@
-CXX = g++ -std=c++0x -Wall -pedantic
-SRC = treeParser_exemple.c
-MAIN = DOMGETTER
+CXX = gcc
+#FLAGS =  -std=c++0x -Wall -pedantic
+SRC = domParser_exemple.c
+MAIN = DOMPARSER
 
 all: $(MAIN)
 
-treeParser_exemple.o:$(SRC)
+domParser_exemple.o:$(SRC)
 	$(CXX) -c $^ `xml2-config --cflags --libs` -o $@
 
-$(MAIN):treeParser_exemple.o
+$(MAIN):domParser_exemple.o
 	$(CXX) $^ -lxml2 -o $@
 
 clean:
-	rm treeParser_exemple.o $(MAIN)
+	rm domParser_exemple.o $(MAIN)

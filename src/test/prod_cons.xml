@@ -2,13 +2,30 @@
 	<declare>
 		<component name="IReturnRandomNumbers">
 			<dataOut name="firstNumber" type="double"/>
-			<dataOut name="anotherNumber" type="double"/>
-			<dataOut name="thirdNumber" type="double"/>
+			<dataOut name="randNumber" type="double"/>
 		</component>
 
 		<component name= "IUseRandomNumbers">
-			<dataIn name="aRandNumber" type="double"/>
+			<dataIn name="number1" type="double"/>
+			<dataIn name="number2" type="double"/>
 			<dataOut name="finalNumber" type="double"/>
 		</component>
+
+		<instance name="producer" componentRef="IReturnRandomNumbers" path="/Servers/randomServer" signature="./launcher.sh"/>
+		<instance name="consummer" componentRef="IUseRandomNumbers" path="/Clients/randomClient" signature="./launcher.sh"/>
+
+		<configPort>
+			<inout>
+				<setPort in="producer.firstNumber" out="consummer.number1"/>
+				<setPort in="producer.randNumber" out="consummer.number2"/>
+			</inout>
+		</configPort>
 	</declare>
+
+	<instruction>
+		<sequence>
+			<exectask name="producer"/>
+			<exectask name="consummer"/>
+		</sequence>
+	</instruction>
 </stcmassembly>
