@@ -20,11 +20,11 @@ public:
 		//Instance* getInstance(std::string name);
 		//ConfigPort* getConfigPort();
 
-		void addComponent(std::string name, Component c);
+		void addComponent(const char* name, Component &c);
 		//int addInstance(std::string name, Instance i);
 
 		//avec get() y'à pas de boundary check dc à voir
-		//Component* searchComponent(std::string name);
+		Component* searchComponent(std::string name);
 		//Instance* searchInstance(std::string name);
 
 		void print(std::ostream& os) const;

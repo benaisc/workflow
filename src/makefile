@@ -1,11 +1,15 @@
 CXX = g++
-FLAGS = -std=c++11 -Wall -pedantic
+FLAGS = -std=c++11
+# -Wall -pedantic
 #SRC = STCMAssembly.cpp Declare.cpp Component.cpp
 TARGET = TEST
 
 all: $(TARGET)
 
 MainTest.o: MainTest.cpp
+	$(CXX) `xml2-config --cflags --libs` $(FLAGS) -c $^
+
+LibParser.o: LibParser.cpp
 	$(CXX) `xml2-config --cflags --libs` $(FLAGS) -c $^
 
 STCMAssembly.o: STCMAssembly.cpp
@@ -17,7 +21,7 @@ Declare.o: Declare.cpp
 Component.o: Component.cpp
 	$(CXX) $(FLAGS) -c $^
 
-$(TARGET): MainTest.o STCMAssembly.o Declare.o Component.o
+$(TARGET): MainTest.o LibParser.o STCMAssembly.o Declare.o Component.o
 	$(CXX) $^ -lxml2 -o $@
 
 clean:

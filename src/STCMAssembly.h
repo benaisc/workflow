@@ -29,14 +29,7 @@ class STCMAssembly{
 		*/
 		STCMAssembly();
 
-		/*! \fn parse(FILE* stcmXml)
-			\brief Construct from a file
-			\param stcmXml A pointer to the STCMAssembly XML
-			\return A filled STCMAssembly object or NULL.
-		*/
-		STCMAssembly* parse(std::string stcmXmlPath);
-
-		//Declare* getDeclarations();
+		Declare* getDeclarations();
 		//Instruction* getInstructions();
 
 		void print(std::ostream& os) const;

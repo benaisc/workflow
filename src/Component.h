@@ -15,7 +15,7 @@ class Component{
 
 	public:
 		Component();
-		Component(std::string nameAttr);
+		Component(const char* nameAttr);
 		Component(const Component &c);
 		//void addOutPort(OutPort outp);
 		//void addInPort(InPort inp);

@@ -2,7 +2,7 @@
 
 
 Component::Component() : name("Unknown"){}
-Component::Component(std::string nameAttr) : name(nameAttr){}
+Component::Component(const char* nameAttr) : name(nameAttr){}
 Component::Component(const Component &c) : name(c.name){}
 /*
 void Component::addOutPort(OutPort outp){
