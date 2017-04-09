@@ -7,10 +7,9 @@
 #ifndef __STCMASSEMBLY_H__
 #define __STCMASSEMBLY_H__
 
-#include <libxml2>
-#include <iostream>
 #include "Declare.h"
-#include "Instruction.h"
+
+//#include "Instruction.h"
 
 /*! \class STCMAssembly
     \brief Template for base STCMAssembly class.
@@ -22,7 +21,7 @@
 class STCMAssembly{
 	private:
 		Declare declarations;
-		Instruction instructions;
+		//Instruction instructions;
 
 	public:
 		/*! \fn STCMAssembly()
@@ -35,12 +34,12 @@ class STCMAssembly{
 			\param stcmXml A pointer to the STCMAssembly XML
 			\return A filled STCMAssembly object or NULL.
 		*/
-		STCMAssembly* parse(FILE* stcmXmlPath);
+		STCMAssembly* parse(std::string stcmXmlPath);
 
-		Declare* getDeclarations();
-		Instruction* getInstructions();
+		//Declare* getDeclarations();
+		//Instruction* getInstructions();
 
-		void print(std::ostream& os);
+		void print(std::ostream& os) const;
 };
 std::ostream &operator<<(std::ostream& os, const STCMAssembly &STCM);
 
