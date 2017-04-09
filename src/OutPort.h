@@ -1,5 +1,5 @@
-#ifndef OUTPORT_H
-#define OUTPORT_H
+#ifndef __OUTPORT_H__
+#define __OUTPORT_H__
 
 #include "Port.h"
 
@@ -7,7 +7,10 @@
 class OutPort : public Port
 {
 public:
-    OutPort(string n, string t);
+    OutPort(std::string n, std::string t);
+
+    //@Override
+    void print(std::ostream& os) const;
 };
 
 #endif // OUTPORT_H

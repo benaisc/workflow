@@ -18,13 +18,13 @@ void parse_component (xmlNode * a_node, Component &c) {
         if(attribute){
           xmlChar* set;
           set = xmlNodeListGetString(cur_node->doc, attribute->children, 1);
-          //c.addInPort(new InPort(name, type, set));
           printf("dataIn name= %s, type= %s, set=%s\n", name, type, set);
+          c.addInPort(InPort((const char*)name, (const char*)type, (const char*)set));
           xmlFree(set);
         }
         else{
-          //c.addInPort(new InPort(name, type));
           printf("dataIn name= %s, type= %s\n", name, type);
+          c.addInPort(InPort((const char*)name, (const char*)type));
         }
 
         xmlFree(name);
@@ -39,8 +39,8 @@ void parse_component (xmlNode * a_node, Component &c) {
         xmlChar* type;
         type = xmlNodeListGetString(cur_node->doc, attribute->children, 1);
 
-        //c.addOutPort(new OutPort(name, type));
         printf("dataOut name = %s, type = %s\n", name, type);
+        c.addOutPort(OutPort((const char*)name, (const char*)type));
 
         xmlFree(name);
         xmlFree(type);
@@ -53,15 +53,15 @@ void parse_component (xmlNode * a_node, Component &c) {
     }
   }
 }
-/*
+
 //static void parse_inout (xmlNode * a_node, InOut inout) {
-static void parse_inout (xmlNode * a_node) {
+void parse_inout (xmlNode * a_node) {
   xmlNode *cur_node = NULL;
 
   for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
     if (cur_node->type == XML_ELEMENT_NODE) {
 
-      if (strcmp(cur_node->name, "setPort") == 0){
+      if (strcmp((const char*)cur_node->name, "setPort") == 0){
         xmlAttr* attribute = cur_node->properties;
         xmlChar* in;
         in = xmlNodeListGetString(cur_node->doc, attribute->children, 1);
@@ -69,7 +69,7 @@ static void parse_inout (xmlNode * a_node) {
         xmlChar* out;
         out = xmlNodeListGetString(cur_node->doc, attribute->children, 1);
 
-        //SetPort lien = SetPort(in, out);
+        //SetPort lien = SetPort((const char*)in, (const char*)out);
         //inout.addInOut(lien);
         printf("setPort in = %s, out = %s\n", in, out);
       }
@@ -83,20 +83,20 @@ static void parse_inout (xmlNode * a_node) {
 }
 
 //static void parse_configPort (xmlNode * a_node, ConfigPort ports) {
-static void parse_configPort (xmlNode * a_node) {
+void parse_configPort (xmlNode * a_node) {
   xmlNode *cur_node = NULL;
 
   for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
     if (cur_node->type == XML_ELEMENT_NODE) {
 
-      if (strcmp(cur_node->name, "inout") == 0){
+      if (strcmp((const char*)cur_node->name, "inout") == 0){
         //InOut inout = InOut();
         //parse_inout(cur_node->children, &inout);
         //ports.setInOut(inout);
         printf("parse_inout()\n");
         parse_inout(cur_node->children);
       }
-      //else if(strcmp(cur_node->name, "clientserver") == 0){}
+      //else if(strcmp((const char*)cur_node->name, "clientserver") == 0){}
       else{
         //preuve que l'on ne boucle pas pour rien
         printf("\n");
@@ -104,7 +104,7 @@ static void parse_configPort (xmlNode * a_node) {
     }
   }
 }
-*/
+
 void parse_declaration (xmlNode * a_node, Declare *declare) {
   xmlNode *cur_node = NULL;
 
@@ -125,7 +125,7 @@ void parse_declaration (xmlNode * a_node, Declare *declare) {
 
         xmlFree(name);
       }
-/*      else if (strcmp(cur_node->name, "instance") == 0){
+      else if (strcmp((const char*)cur_node->name, "instance") == 0){
         printf("parse_instance()\n");
         //on récupère ses attributs
         xmlAttr* attribute = cur_node->properties;
@@ -150,7 +150,7 @@ void parse_declaration (xmlNode * a_node, Declare *declare) {
         xmlFree(name); xmlFree(componentRef);
         xmlFree(path); xmlFree(signature);
       }
-      else if (strcmp(cur_node->name, "configPort") == 0){
+      else if (strcmp((const char*)cur_node->name, "configPort") == 0){
         printf("parse_configPort()\n");
         //TODO: crée l'objet configPort, son inout et ses setPorts
         //ConfigPort confports = ConfigPort();
@@ -158,7 +158,7 @@ void parse_declaration (xmlNode * a_node, Declare *declare) {
         //declare.setPorts(confports);
         parse_configPort(cur_node->children);
       }
-*/      else{
+      else{
         //preuve que l'on ne boucle pas pour rien
         printf("\n");
       }
@@ -189,7 +189,6 @@ void parse_stcm (xmlNode * a_node, STCMAssembly *stcmassembly) {
       }
     }
     parse_stcm(cur_node->children, stcmassembly);
-    //parse_stcm(cur_node->children);
   }
 }
 

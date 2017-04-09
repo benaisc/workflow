@@ -1,19 +1,19 @@
 #ifndef __PORT_H__
 #define __PORT_H__
 
-#include <string>
+#include <iostream>
 
-
-virtual class Port
+class Port
 {
 protected:
-    string name;
-    string type;
+    std::string name;
+    std::string type;
 
 public:
-	explicit Port(string name, string type);
+	explicit Port(std::string name, std::string type);
 
-  void print();
+  virtual void print(std::ostream& os) const {}
 };
 
+std::ostream &operator<<(std::ostream& os, const Port &iop);
 #endif // PORT_H

@@ -1,8 +1,11 @@
 #include "Port.h"
 
 
-Port::Port(string n, string t) : name(n), type(t) {}
+Port::Port(std::string n, std::string t) : name(n), type(t) {}
 
-void Port::print(){
-  std::cout << name << " : " << type << std::endl;
+std::ostream &operator<<(std::ostream& os, const Port &iop){
+  os << "<Port>\n";
+  iop.print(os);
+  os << "</Port>\n";
+  return os;
 }

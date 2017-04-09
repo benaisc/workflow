@@ -21,7 +21,16 @@ Declare.o: Declare.cpp
 Component.o: Component.cpp
 	$(CXX) $(FLAGS) -c $^
 
-$(TARGET): MainTest.o LibParser.o STCMAssembly.o Declare.o Component.o
+InPort.o: InPort.cpp
+	$(CXX) $(FLAGS) -c $^
+
+OutPort.o: OutPort.cpp
+	$(CXX) $(FLAGS) -c $^
+
+Port.o: Port.cpp
+	$(CXX) $(FLAGS) -c $^
+
+$(TARGET): MainTest.o LibParser.o STCMAssembly.o Declare.o Component.o InPort.o OutPort.o Port.o
 	$(CXX) $^ -lxml2 -o $@
 
 clean:

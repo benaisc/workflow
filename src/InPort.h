@@ -3,17 +3,19 @@
 
 #include "Port.h"
 
-
 class InPort : public Port
 {
 private:
-    string set;
+    std::string set;
 
 public:
-    InPort(string n, string t);
-    InPort(string n, string t, string s);
+    InPort(std::string n, std::string t);
+    InPort(std::string n, std::string t, std::string s);
 
     bool isSetted() const;
+
+    //@Override
+    void print(std::ostream& os) const;
 };
 
 #endif

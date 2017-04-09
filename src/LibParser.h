@@ -10,8 +10,10 @@
 void parse_component (xmlNode * a_node, Component &c);
 
 //void parse_inout (xmlNode * a_node, InOut inout);
+void parse_inout (xmlNode * a_node);
 
 //void parse_configPort (xmlNode * a_node, ConfigPort ports);
+void parse_configPort (xmlNode * a_node);
 
 void parse_declaration (xmlNode * a_node, Declare *declare);
 
