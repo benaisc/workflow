@@ -25,13 +25,14 @@ void Component::print(std::ostream& os) const {
   os << "<Component name='" << this->name << "'>\n";
   for (auto &p : this->inports)
     p.print(os);
+
   for (auto &p : this->outports)
     p.print(os);
+
   os << "</Component>\n";
 }
 
-std::ostream &operator<<(std::ostream& os, const Component &c)
-{
+std::ostream &operator<<(std::ostream& os, const Component &c){
   c.print(os);
   return os;
 }

@@ -30,7 +30,10 @@ OutPort.o: OutPort.cpp
 Port.o: Port.cpp
 	$(CXX) $(FLAGS) -c $^
 
-$(TARGET): MainTest.o LibParser.o STCMAssembly.o Declare.o Component.o InPort.o OutPort.o Port.o
+Instance.o: Instance.cpp
+	$(CXX) $(FLAGS) -c $^
+
+$(TARGET): MainTest.o LibParser.o STCMAssembly.o Declare.o Component.o InPort.o OutPort.o Port.o Instance.o
 	$(CXX) $^ -lxml2 -o $@
 
 clean:

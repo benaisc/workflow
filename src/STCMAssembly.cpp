@@ -20,8 +20,7 @@ void STCMAssembly::print(std::ostream &os) const {
 	os << "</STCMAssembly>\n";
 }
 
-std::ostream &operator<<(std::ostream& os, const STCMAssembly &STCM)
-{
+std::ostream &operator<<(std::ostream& os, const STCMAssembly &STCM){
   STCM.print(os);
   return os;
 }

@@ -3,29 +3,29 @@
 
 #include <unordered_map>
 #include "Component.h"
-//#include "Instance.h"
+#include "Instance.h"
 //#include "ConfigPort.h"
 
 class Declare
 {
 private:
 		std::unordered_map<std::string, Component> components;
-		//std::tr1::unordered_map<std::string, Instance> instances;
+		std::unordered_map<std::string, Instance> instances;
 		//ConfigPort configPorts;
 
 public:
     Declare();
 
+		void addComponent(const char* name, Component &c);
+		void addInstance(const char* name, Instance &i);
+
 		//Component* getComponent(std::string name);
 		//Instance* getInstance(std::string name);
 		//ConfigPort* getConfigPort();
 
-		void addComponent(const char* name, Component &c);
-		//int addInstance(std::string name, Instance i);
-
 		//avec get() y'à pas de boundary check dc à voir
 		Component* searchComponent(std::string name);
-		//Instance* searchInstance(std::string name);
+		Instance* searchInstance(std::string name);
 
 		void print(std::ostream& os) const;
 };

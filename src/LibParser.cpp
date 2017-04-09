@@ -8,7 +8,7 @@ void parse_component (xmlNode * a_node, Component &c) {
 
       if (strcmp((const char*)cur_node->name, "dataIn") == 0){
         xmlAttr* attribute = cur_node->properties;
-        //récupère la valeur des attributs nom et type
+        //récupère la valeur des attributs nom et type puis on ajoute le port
         xmlChar* name;
         name = xmlNodeListGetString(cur_node->doc, attribute->children, 1);
         attribute = attribute->next;
@@ -144,8 +144,9 @@ void parse_declaration (xmlNode * a_node, Declare *declare) {
         xmlChar* signature;
         signature = xmlNodeListGetString(cur_node->doc, attribute->children, 1);
 
-        //declare->addInstrance(Instance(name, componentRef, path, signature));
         printf("Instance name = %s, componentRef = %s, path = %s, signature = %s\n", name, componentRef, path, signature);
+        Instance inst = Instance((const char*)name, (const char*)componentRef, (const char*)path, (const char*)signature);
+        declare->addInstance((const char*)name, inst);
 
         xmlFree(name); xmlFree(componentRef);
         xmlFree(path); xmlFree(signature);
