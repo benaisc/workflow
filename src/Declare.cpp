@@ -10,20 +10,23 @@ void Declare::addInstance(const char* name, Instance &i){
 	this->instances[name] = i;
 }
 
+void Declare::setPorts(ConfigPort &cfg){
+	this->configPort = cfg;
+}
 
 /*
 Component* Declare::getComponent(std::string name){
-	return this.components[name];
+	return &this->components[name];
 }
 
 Instance* Declare::getInstance(std::string name){
-	return this.instances[name];
-}
-
-ConfigPort* Declare::getConfigPort(){
-	return this.configPort;
+	return &this->instances[name];
 }
 */
+ConfigPort* Declare::getConfigPort(){
+	return &this->configPort;
+}
+
 
 Component* Declare::searchComponent(std::string name){
 	auto search = this->components.find(name);
@@ -47,7 +50,6 @@ Instance* Declare::searchInstance(std::string name){
 	}
 }
 
-
 void Declare::print(std::ostream& os) const {
 	os << "<Declare>\n";
 
@@ -56,12 +58,12 @@ void Declare::print(std::ostream& os) const {
 	for (auto &i : this->instances)
 		std::get<1>(i).print(os);
 
-	//configPort.print(&os);
+	configPort.print(os);
+
 	os << "</Declare>\n";
 }
 
-std::ostream &operator<<(std::ostream& os, const Declare &d)
-{
+std::ostream &operator<<(std::ostream& os, const Declare &d){
   d.print(os);
   return os;
 }

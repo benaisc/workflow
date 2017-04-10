@@ -1,18 +1,23 @@
-#ifndef SETPORT_H
-#define SETPORT_H
+#ifndef __SETPORT_H__
+#define __SETPORT_H__
 
-#include "InPort.h"
-#include "OutPort.h"
+//#include "InPort.h"
+//#include "OutPort.h"
 
+#include <iostream>
+#include <string>
 
 class SetPort
 {
 private:
-	string in;
-	string out;
+	std::string in;
+	std::string out;
 
 public:
-    SetPort(string in, string out);
+  SetPort(std::string in, std::string out);
+
+	void print(std::ostream& os) const;
 };
+std::ostream &operator<<(std::ostream& os, const SetPort &port);
 
 #endif // SETPORT_H

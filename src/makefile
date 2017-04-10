@@ -1,7 +1,6 @@
 CXX = g++
-FLAGS = -std=c++11
-# -Wall -pedantic
-#SRC = STCMAssembly.cpp Declare.cpp Component.cpp
+FLAGS = -std=c++11 -Wall -pedantic
+#SRC = STCMAssembly.cpp Declare.cpp Component.cpp InPort.cpp OutPort.cpp Port.cpp Instance.cpp ConfigPort.cpp InOut.cpp SetPort.cpp
 TARGET = TEST
 
 all: $(TARGET)
@@ -33,14 +32,21 @@ Port.o: Port.cpp
 Instance.o: Instance.cpp
 	$(CXX) $(FLAGS) -c $^
 
-$(TARGET): MainTest.o LibParser.o STCMAssembly.o Declare.o Component.o InPort.o OutPort.o Port.o Instance.o
+ConfigPort.o: ConfigPort.cpp
+	$(CXX) $(FLAGS) -c $^
+
+InOut.o: InOut.cpp
+	$(CXX) $(FLAGS) -c $^
+
+SetPort.o: SetPort.cpp
+	$(CXX) $(FLAGS) -c $^
+
+$(TARGET): MainTest.o LibParser.o STCMAssembly.o Declare.o Component.o InPort.o OutPort.o Port.o Instance.o ConfigPort.o InOut.o SetPort.o
 	$(CXX) $^ -lxml2 -o $@
 
 clean:
 	rm *.o $(TARGET)
 
-# à la main :
-#g++ -std=c++11 -Wall -pedantic -c STCMAssembly.cpp Declare.cpp Component.cpp
-#g++ `xml2-config --cflags --libs` -std=c++11 -Wall -pedantic -c MainTest.cpp
-#g++ *.o -o TEST
+#usage:
+# make
 # ./TEST test/prod_cons.xml

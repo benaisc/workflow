@@ -5,12 +5,12 @@ Component::Component() : name("Unknown"){}
 Component::Component(const char* nameAttr) : name(nameAttr){}
 Component::Component(const Component &c) : name(c.name){}
 
-void Component::addOutPort(OutPort outp){
-  this->outports.push_front(outp);
+void Component::addOutPort(OutPort *outp){
+  this->outports.push_front(*outp);
 }
 
-void Component::addInPort(InPort inp){
-  this->inports.push_front(inp);
+void Component::addInPort(InPort *inp){
+  this->inports.push_front(*inp);
 }
 /*
 std::list<OutPort>* Component::getOutPorts() const{

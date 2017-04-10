@@ -16,8 +16,8 @@ class Component{
 		Component();
 		Component(const char* nameAttr);
 		Component(const Component &c);
-		void addOutPort(OutPort outp);
-		void addInPort(InPort inp);
+		void addOutPort(OutPort *outp);
+		void addInPort(InPort *inp);
 		//std::list<OutPort>* getOutPorts() const;
 		//std::list<InPort>* getInPorts() const;
 		//bool addAttribute(Attribute attr);
