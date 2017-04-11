@@ -1,11 +1,18 @@
+/*! \file LibParser.h
+    \brief A Parser used to query STCM-XML's.
+
+    Simply built on libxml2 to reduce dependencys.
+*/
 #ifndef __PARSER_H__
 #define __PARSER_H__
 
-#include <string.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+#include <string.h>
+
 #include "STCMAssembly.h"
 
+#define DEBUG 0
 
 void parse_component (xmlNode * a_node, Component &c);
 

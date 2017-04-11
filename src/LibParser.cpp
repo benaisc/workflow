@@ -18,12 +18,12 @@ void parse_component (xmlNode * a_node, Component &c) {
         if(attribute){
           xmlChar* set;
           set = xmlNodeListGetString(cur_node->doc, attribute->children, 1);
-          printf("dataIn name= %s, type= %s, set=%s\n", name, type, set);
+          if (DEBUG == 1) printf("dataIn name= %s, type= %s, set=%s\n", name, type, set);
           c.addInPort(new InPort((const char*)name, (const char*)type, (const char*)set));
           xmlFree(set);
         }
         else{
-          printf("dataIn name= %s, type= %s\n", name, type);
+          if (DEBUG == 1) printf("dataIn name= %s, type= %s\n", name, type);
           c.addInPort(new InPort((const char*)name, (const char*)type));
         }
 
@@ -39,7 +39,7 @@ void parse_component (xmlNode * a_node, Component &c) {
         xmlChar* type;
         type = xmlNodeListGetString(cur_node->doc, attribute->children, 1);
 
-        printf("dataOut name = %s, type = %s\n", name, type);
+        if (DEBUG == 1) printf("dataOut name = %s, type = %s\n", name, type);
         c.addOutPort(new OutPort((const char*)name, (const char*)type));
 
         xmlFree(name);
@@ -68,7 +68,7 @@ void parse_inout (xmlNode * a_node, InOut &inout) {
         xmlChar* out;
         out = xmlNodeListGetString(cur_node->doc, attribute->children, 1);
 
-        printf("setPort in = %s, out = %s\n", in, out);
+        if (DEBUG == 1) printf("setPort in = %s, out = %s\n", in, out);
         SetPort lien = SetPort((const char*)in, (const char*)out);
         inout.addPort(lien);
       }
@@ -88,7 +88,7 @@ void parse_configPort (xmlNode * a_node, ConfigPort &ports) {
     if (cur_node->type == XML_ELEMENT_NODE) {
 
       if (strcmp((const char*)cur_node->name, "inout") == 0){
-        printf("parse_inout()\n");
+        if (DEBUG == 1) printf("parse_inout()\n");
         InOut inout = InOut();
         parse_inout(cur_node->children, inout);
         ports.setInOut(inout);
@@ -108,7 +108,7 @@ void parse_declaration (xmlNode * a_node, Declare *declare) {
   for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
     if (cur_node && cur_node->type == XML_ELEMENT_NODE) {
       if (strcmp((const char*)cur_node->name, "component") == 0){
-        printf("parse_component()\n");
+        if (DEBUG == 1) printf("parse_component()\n");
         //on récupère son nom
         xmlAttr* attribute = cur_node->properties;
         xmlChar* name;
@@ -123,7 +123,7 @@ void parse_declaration (xmlNode * a_node, Declare *declare) {
         xmlFree(name);
       }
       else if (strcmp((const char*)cur_node->name, "instance") == 0){
-        printf("parse_instance()\n");
+        if (DEBUG == 1) printf("parse_instance()\n");
         //on récupère ses attributs
         xmlAttr* attribute = cur_node->properties;
         xmlChar* name;
@@ -141,7 +141,7 @@ void parse_declaration (xmlNode * a_node, Declare *declare) {
         xmlChar* signature;
         signature = xmlNodeListGetString(cur_node->doc, attribute->children, 1);
 
-        printf("Instance name = %s, componentRef = %s, path = %s, signature = %s\n", name, componentRef, path, signature);
+        if (DEBUG == 1) printf("Instance name = %s, componentRef = %s, path = %s, signature = %s\n", name, componentRef, path, signature);
         Instance inst = Instance((const char*)name, (const char*)componentRef, (const char*)path, (const char*)signature);
         declare->addInstance((const char*)name, inst);
 
@@ -149,7 +149,7 @@ void parse_declaration (xmlNode * a_node, Declare *declare) {
         xmlFree(path); xmlFree(signature);
       }
       else if (strcmp((const char*)cur_node->name, "configPort") == 0){
-        printf("parse_configPort()\n");
+        if (DEBUG == 1) printf("parse_configPort()\n");
         //crée l'objet configPort, son inout et ses setPorts
         ConfigPort confports = ConfigPort();
         parse_configPort(cur_node->children, confports);
@@ -164,28 +164,51 @@ void parse_declaration (xmlNode * a_node, Declare *declare) {
 }
 
 void parse_instruction (xmlNode * a_node) {
-  printf("parse_instruction()....\n");
-}
-
-void parse_stcm (xmlNode * a_node, STCMAssembly *stcmassembly) {
   xmlNode *cur_node = NULL;
 
   for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
     if (cur_node->type == XML_ELEMENT_NODE) {
 
+      if (strcmp((const char*)cur_node->name, "sequence") == 0){
+        printf("parse_sequence()... TODO\n");
+        //crée l'objet instruction avec ses attributs
+        //parse_sequence(cur_node->children);
+      }
+      else if (strcmp((const char*)cur_node->name, "parallel") == 0){
+        printf("parse_parallel()... TODO\n");
+        //TODO: crée l'objet instruction avec ses attributs
+        //parse_parallel(cur_node->children);
+      }
+      else{
+        //preuve que l'on ne boucle pas pour rien
+        printf("\n");
+      }
+    }
+  }
+}
+
+void parse_stcm (xmlNode * a_node, STCMAssembly *stcmassembly) {
+  xmlNode *cur_node = NULL;
+
+  for (cur_node = a_node->children; cur_node; cur_node = cur_node->next) {
+    if (cur_node->type == XML_ELEMENT_NODE) {
+
       if (strcmp((const char*)cur_node->name, "declare") == 0){
-        printf("parse_declaration()\n");
+        if (DEBUG == 1) printf("parse_declaration()\n");
         //crée l'objet component avec ses dataIn et dataOut
         parse_declaration(cur_node->children, stcmassembly->getDeclarations());
       }
-      if (strcmp((const char*)cur_node->name, "instruction") == 0){
+      else if (strcmp((const char*)cur_node->name, "instruction") == 0){
         printf("parse_instruction()\n");
         //TODO: crée l'objet instruction avec ses attributs
-        //parse_instruction(cur_node->children, &stcmassembly);
+        //parse_instruction(cur_node->children, stcmassembly->getInstructions());
         parse_instruction(cur_node->children);
       }
+      else{
+        //preuve que l'on ne boucle pas pour rien
+        printf("\n");
+      }
     }
-    parse_stcm(cur_node->children, stcmassembly);
   }
 }
 
