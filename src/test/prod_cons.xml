@@ -1,23 +1,31 @@
-<stcmassembly>
+<assembly>
 	<declare>
-		<component name="IReturnRandomNumbers">
-			<dataOut name="firstNumber" type="double"/>
-			<dataOut name="randNumber" type="double"/>
+		<component name="RandProducer">
+			<dataOut name="randNumber" type="int"/>
+			<dataOut name="specialNumber" type="double"/>
 		</component>
 
-		<component name= "IUseRandomNumbers">
-			<dataIn name="number1" type="double"/>
-			<dataIn name="number2" type="double"/>
-			<dataOut name="finalNumber" type="double"/>
+		<component name= "ConsummerMapper">
+			<dataIn name="traitementA" type="int"/>
+			<dataIn name="traitementB" type="int"/>
+			<dataIn name="traitementSpecial" type="double"/>
+			<dataOut name="dataReport" type="string"/>
 		</component>
 
-		<instance name="producer" componentRef="IReturnRandomNumbers" path="/Servers/randomServer" signature="./launcher.sh"/>
-		<instance name="consummer" componentRef="IUseRandomNumbers" path="/Clients/randomClient" signature="./launcher.sh"/>
+		<component name= "InputStringLogger">
+			<dataIn name="reportDataFeed" type="string"/>
+		</component>
+
+		<instance name="producer" componentRef="RandProducer" path="/Servers/RandProducer/launch.sh" signature="TYPE_OPAQUE"/>
+		<instance name="consummer" componentRef="ConsummerMapper" path="/Clients/ConsummerMapper/launch.sh" signature="TYPE_OPAQUE"/>
+		<instance name="logger" componentRef="InputStringLogger" path="/Loggers/InputStringLogger/launch.sh" signature="TYPE_OPAQUE"/>
 
 		<configPort>
 			<inout>
-				<setPort in="producer.firstNumber" out="consummer.number1"/>
-				<setPort in="producer.randNumber" out="consummer.number2"/>
+				<setPort in="consummer.traitementA" out="producer.randNumber"/>
+				<setPort in="consummer.traitementB" out="producer.randNumber"/>
+				<setPort in="consummer.traitementSpecial" out="producer.specialNumber"/>
+				<setPort in="logger.reportDataFeed" out="consummer.dataReport"/>
 			</inout>
 		</configPort>
 	</declare>
@@ -26,6 +34,7 @@
 		<sequence>
 			<exectask name="producer"/>
 			<exectask name="consummer"/>
+			<exectask name="logger"/>
 		</sequence>
 	</instruction>
-</stcmassembly>
+</assembly>
