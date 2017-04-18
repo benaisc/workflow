@@ -64,5 +64,22 @@ class Ordonnanceur{
 		* Suppose l'assembly construit sur les bases d'un XML validé par Schéma XSD
 		* Valide l'assemblage sur la base des fonctions définies ci-dessus;
 		*/
+
+		
+		/*
+			il nous faudrait implémenter un système de headers permettant à l'ordonnanceur 
+			de générer du code par le lien des méthodes déclarées dans l'XML et nous offrir
+			la possibilitée d'appeler les méthodes distantes des instances de composants
+		*/
+
+
+
+
+
+
+
+
+
+
 };
 #endif
