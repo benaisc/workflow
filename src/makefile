@@ -5,7 +5,7 @@ TARGET = TEST
 
 all: $(TARGET)
 
-MainTest.o: MainTest.cpp
+main.o: main.cpp
 	$(CXX) `xml2-config --cflags --libs` $(FLAGS) -c $^
 
 LibParser.o: LibParser.cpp
@@ -41,7 +41,7 @@ InOut.o: InOut.cpp
 SetPort.o: SetPort.cpp
 	$(CXX) $(FLAGS) -c $^
 
-$(TARGET): MainTest.o LibParser.o STCMAssembly.o Declare.o Component.o InPort.o OutPort.o Port.o Instance.o ConfigPort.o InOut.o SetPort.o
+$(TARGET): main.o LibParser.o STCMAssembly.o Declare.o Component.o InPort.o OutPort.o Port.o Instance.o ConfigPort.o InOut.o SetPort.o
 	$(CXX) $^ -lxml2 -o $@
 
 clean:
