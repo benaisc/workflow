@@ -1,0 +1,78 @@
+include "assembly.h"
+include "machine.h"
+
+public class ordonanceur {
+	hashMap refInternalPort <(instance, port), refPort>;
+	hashMap listComponentStartedAndReferences <instance, refInstance>
+	hashMap listDataSend <(instance, port), boolean>;
+
+	Declare ActualDeclare;
+
+	pile ([Declare]) pileActualDeclare;
+
+
+	getMachineWithDisponibleRessource(){
+		//TODO 
+		//C'est ce qui permet de regarder l'ensemble des machines et de renvoyer une machine qui dispose des ressources demandé (ram, cpu ...)
+	}
+
+	/* ------------------------------------------------------------------------ */
+	/* 					FONCTION D'INSTANCIATION DE COMPOSANT 					*/
+	/* ------------------------------------------------------------------------ */
+	refInstance startInstance(Instance i){
+	    if (empty(listComponentStartedAndReferences.get(i))){
+	      Ressources r = i.getNecessaryRessource(); //optionnal
+	      Machine m = this.getMachineWithDisponibleRessource(r);
+	      refInstance componentStart = m.startComponent(i.getStartingParameters);
+	      listComponentStartedAndReferences.add(i, componentStart);
+	      connectAllOutPort(componentStart, i);
+	      return componentStart;
+	    }else{
+	      return listComponentStartedAndReferences.get(i);
+	    }
+	}
+	/* ------------------------------------------------------------------------ */
+	/* 					FONCTION DE CONNEXION DES PORT DE SORTIE 				*/
+	/* ------------------------------------------------------------------------ */
+	connectAllOutPort(refInstance rI, Instance i){
+	    for (each port in i.getAllOutPort()){
+	        rI.connect(port.getName, refInternalPort (i, port);
+	    }
+	}
+	/* ------------------------------------------------------------------------ */
+	/* 				FONCTION D'ENVOIE DE DONNÉE VERS LE COMPOSANT 				*/
+	/* ------------------------------------------------------------------------ */
+	sendDataToInstance(Data d, refInstance componentStart, Port p){
+	    if (!empty(listDataSend.get(componentStart, p))){
+	      componentStart.sendDataForPort(data, port.getname());
+	      listDataSend.add(componentStart, p, true);
+	    }
+	}
+	/* ------------------------------------------------------------------------ */
+	/* 					FONCTION DE DEMARRAGE D'UN COMPOSANT 					*/
+	/* ------------------------------------------------------------------------ */
+	lancement(instance i){
+	    RefComponnent comp = listComponentStartedAndReferences.get(i);
+	    if (comp == null){
+	        comp = startInstance(i);
+	    }
+	    for (each Port p in i){
+	        for (each ConfigPort cp in ActualDeclare.getconfigPort()){
+	            if (cp.in == p){
+	            	data = refInternalPort(cp.out.getInstance(), cp.out.getPort()).getValue();
+	                if (data != null) {
+	                    sendDataToInstance(data, comp, p);
+	                }else{
+	                    comp.setvoid(p.getname());
+	                }
+	            }
+	        }
+	    }
+	}
+	/* ------------------------------------------------------------------------ */
+
+
+
+
+}
+
