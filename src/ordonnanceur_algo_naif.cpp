@@ -2,9 +2,7 @@ include "assembly.h"
 include "machine.h"
 
 public class ordonanceur {
-	hashMap refInternalPort <(instance, port), refPort>;
-	hashMap listComponentStartedAndReferences <instance, refInstance>
-	hashMap listDataSend <(instance, port), boolean>;
+	hashMap listComponentStartedAndReferences <instance, refInstance>;
 
 	Declare ActualDeclare;
 
@@ -33,28 +31,16 @@ public class ordonanceur {
 	    }
 	}
 	/* ------------------------------------------------------------------------ */
-	/* 					FONCTION DE CONNEXION DES PORT DE SORTIE 				*/
+	/* 					CONNEXION DIRECTE ENTRE LES COMPOSANTS 					*/
 	/* ------------------------------------------------------------------------ */
-	connectAllOutPort(refInstance rI, Instance i){
-	    for (each port in i.getAllOutPort()){
-	        rI.connect(port.getName, refInternalPort (i, port);
-	    }
-	}
-	/* ------------------------------------------------------------------------ */
-	/* 					CONNEXION ENTRE DEUX PORT DE COMPOSANT 					*/
-	/* ------------------------------------------------------------------------ */
-	connexion (refInstance ref1, refInstance ref2, String portName1, String portName2){
-		
-
-	}
-	/* ------------------------------------------------------------------------ */
-	/* 				FONCTION D'ENVOIE DE DONNÉE VERS LE COMPOSANT 				*/
-	/* ------------------------------------------------------------------------ */
-	sendDataToInstance(Data d, refInstance componentStart, Port p){
-	    if (!empty(listDataSend.get(componentStart, p))){
-	      componentStart.sendDataForPort(data, port.getname());
-	      listDataSend.add(componentStart, p, true);
-	    }
+	externalConnexion (Declare d){
+		for (each cP in d.getconfigPort()){
+			listComponentStartedAndReferences(
+				cP.getInstanceIn()).connect(cP.getPortIn().getName(),
+				listComponentStartedAndReferences(cP.getPortOut()),
+				cP.getPortOut().getName()
+			);
+		}
 	}
 	/* ------------------------------------------------------------------------ */
 	/* 					FONCTION DE DEMARRAGE D'UN COMPOSANT 					*/
@@ -64,17 +50,8 @@ public class ordonanceur {
 	    if (comp == null){
 	        comp = startInstance(i);
 	    }
-	    for (each Port p in i){
-	        for (each ConfigPort cp in ActualDeclare.getconfigPort()){
-	            if (cp.in == p){
-	            	data = refInternalPort(cp.out.getInstance(), cp.out.getPort()).getValue();
-	                if (data != null) {
-	                    sendDataToInstance(data, comp, p);
-	                }else{
-	                    comp.setvoid(p.getname());
-	                }
-	            }
-	        }
+	    if (!comp.isRunning()){
+	    	comp.setVoid();
 	    }
 	}
 	/* ------------------------------------------------------------------------ */
@@ -88,25 +65,6 @@ public class ordonanceur {
 		}
 		actualDeclare = act;
 
-	}
-	/* ------------------------------------------------------------------------ */
-	/* 			ATTENTE DE RECEPTION DE TOUTE LES DONNÉES SORTANTES				*/
-	/* ------------------------------------------------------------------------ */
-	attenteReceptionTotale(Instruction i){
-		boolean receptionTotale = false;
-		boolean internalReception = false;
-		while (!receptionTotale){
-			sleep(10);
-			internalReception = true;
-			for (each pOut in i.getAllOutPort()){
-				if (refInternalPort(pOut, i) == null){
-					internalReception = false;
-				}
-			}
-			if (internalReception){
-				receptionTotale = true;
-			}
-		}
 	}
 	/* ------------------------------------------------------------------------ */
 	/* 					SUPRRESSION D'UN DECLARE EXTERNE						*/
@@ -135,7 +93,11 @@ public class ordonanceur {
 		    	break;
 
 		    case sequence : 
+		    	for (each inst in (sequence)i.getDeclare().getAllInstruction()){
+		    		startInstance(instr);
+		    	}
 			    ajoutDeclare((sequence)i.getDeclare());
+			    externalConnexion((sequence)i.getDeclare());
 
 			    for (each instr in (sequence)i.declare.getAllInstruction()){
 			        for (each pO in instr.getAllPortOut()){
@@ -152,7 +114,7 @@ public class ordonanceur {
 			        }
 			        
 			    }
-			    supDeclare
+			    supDeclare();
 		    	break;    
 	    }
 	}
@@ -165,12 +127,11 @@ public class ordonanceur {
 		ActualDeclare = monAssemblage.getDeclare();
 
 		for (each instr in monAssemblage.getDeclare().getAllInstruction()){
-			for (each pOut in instr.getAllPortOut()){
-				refInternalPort(pOut, instr) = new refPort();
-			}
+			startInstance(instr);
 		}
 
-		
+		externalConnexion(ActualDeclare);
+
 
 		execInstruction(monAssemblage.getInstruction());
 	}

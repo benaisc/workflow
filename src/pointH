@@ -1,0 +1,21 @@
+Les références : c'est le liens vers les objet concret qui permettent d'appeler des fonctions des objets.
+
+L'objet instance qu'on a créé implémentent les fonctions :
+- getNecessaryRessource() : c'est une fonction qui permet d'obtenir les ressources néecessaore au bon fonctionnement de l'instance. Cette fonction n'est pas implémenté car elle dépend du choix fait pour le stockage et l'organisation de ces informations qui n'entre pas dans le cadre du TER.
+- Les getter : tout les getter doivent être implémentées afin de récupérer les informations des instances et pouvoir s'en servir.
+- get_outPorts : appelle la fonction get_outPorts implémenté sur l'objet composant sur le descripteur de l'instance, simplifie l'appel et permet plus de lisibilité.
+
+L'objet composant implémente les fonctions :
+- getter y compris get_outPorts : permet l'utilisation des caractéristique de l'objet pour l'ordonnanceur.
+
+Un composant instancié on doit pourvoir utiliser les fonctions suivantes dessus :
+- connect : qui avec un nom de port et une référence de port permet d'établir une connexion entre le port qui a le nom donnée au sein du composant, et la référence du port donné en paramétre. Le composant fait alors appel a une fonction spécifique selon le protocole de communication choisi afin d'établir une liaison entre les deux port. Ainsi lorsque le port "serveur" obtient une donnée le port "client" à accés a cette donnée de manière interne.
+- sendDataForPort : prend en paramétre une donnée et un nom de port, consiste a positionner la donnée sur le port du composant qui à le nom données en paramétre, cela fera appel a une fonction setValues sur le port afin de rendre disponible la donnée sur celui ci. Cela permet également, si l'ensemble des données attendu sur les port d'entrée et disponible de lancer une tache au sein du composant.
+- setVoid : Fonction permettant pour un nom de port donnée de dire que la donnée n'est pas disponible mais qu'on souhaite tout de même que le composant lance l'éxécution de la tâche. Cette fonction peut également s'appeler pour simplement lancer l'éxécution d'une tâche lorsque le composant n'attend pas de données en entrée, permettant ainsi de faire corréler le controlFlow.
+- end : met fin à l'instance de composant, permet de déterminer au sein du composant qu'il ne sera plus utiliser et ainsi de mettre fin a son éxécution définitivement.
+
+Le port doit implémenté : 
+- le port a un attribut value qui contient une donnée.
+- getValues : permet de retourner la données interne au port.
+- implémente les outils selon le protocole de communication choisi qui permettent de mettre en place une connexion avec un autre port. A la manière d'une socket TCP qui offre les outils nécessaire pour la connecté à une autre socket TCP externe.
+- setValues : donne pour valeur a value la donnée passée en paramétre.
