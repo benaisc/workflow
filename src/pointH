@@ -18,4 +18,8 @@ Le port doit implémenté :
 - le port a un attribut value qui contient une donnée.
 - getValues : permet de retourner la données interne au port.
 - implémente les outils selon le protocole de communication choisi qui permettent de mettre en place une connexion avec un autre port. A la manière d'une socket TCP qui offre les outils nécessaire pour la connecté à une autre socket TCP externe.
-- setValues : donne pour valeur a value la donnée passée en paramétre.
+- setValues : donne pour valeur a value la donnée passée en paramétre
+
+Machine doit implémenté : 
+- Une fonction pour récupérer les ressources disponible dont elle dispose.
+- initialize_component : qui prend en paramétre un path permettant de déterminer ou ce trouve ce qui doit être lancé, un nom qui permet de savoir le nom de ce qui est lancer afin de l'avoir potentiellement dans son répertoire, une signature pour connaitre le langage, et un composant afin de connaitre les ports.

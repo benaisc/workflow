@@ -136,19 +136,20 @@ public class ordonanceur {
 	/* ------------------------------------------------------------------------ */
 	void execute_instruction (Instruction i){
 	    switch (i.get_instruction_type()){
-		    case createInstance :
-		     	instanciation_component((createInstance)i.getInstance());
-		    	break;
 
 		    case execTask : 
-		    	set_input_for_instance((execTask)i.getInstance());
+		    	reference_component_started((execTask)i.getInstance()).setvoid();
 		    	waiting_end_of_instruction((execTask)i.getInstance());
-		    	reference_component_started((execTask)i.getInstance()).end();
+		    	reference_component_started((execTask)i.getInstance()).end();//maybe
 		    	break;
 
 		    case sequence :
 		    	//Ajout des connexions qui doivent être disponible pour le bloc séquence
 			    add_declare((sequence)i.getDeclare());
+			    for (each instr in (sequence)i.getDeclare().getInstruction()){
+			    	instanciation_component(instr);
+			    }
+			    connect_all_direct((sequence)i.getDeclare());
 
 			    for (each instr in (sequence)i.declare.getAllInstruction()){
 			        for (each pOut in instr.get_outPorts()){
@@ -169,8 +170,6 @@ public class ordonanceur {
 			    }
 			    delete_last_declare();
 		    	break;
-
-		    case parrallele :    
 	    }
 	}
 	/* ------------------------------------------------------------------------ */
@@ -182,6 +181,7 @@ public class ordonanceur {
 		actual_declare = internal_assembly.getDeclare();
 
 		for (each instr in internal_assembly.getDeclare().getAllInstruction()){
+			instanciation_component(instr);
 			for (each pOut in instr.get_outPorts()){
 				reference_Interne_Port(pOut, instr) = new asset_port();
 			}
