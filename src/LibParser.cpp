@@ -171,13 +171,13 @@ void parse_instruction (xmlNode * a_node) {
 
       if (strcmp((const char*)cur_node->name, "sequence") == 0){
         printf("parse_sequence()... TODO\n");
-        //crée l'objet instruction avec ses attributs
-        //parse_sequence(cur_node->children);
+        //ajoute à l'objet instruction une sequence
+        //instruction->add(parse_sequence(cur_node->children));
       }
       else if (strcmp((const char*)cur_node->name, "parallel") == 0){
         printf("parse_parallel()... TODO\n");
-        //TODO: crée l'objet instruction avec ses attributs
-        //parse_parallel(cur_node->children);
+        //ajoute à l'objet instruction un groupement parallele
+        //instruction->add(parse_parallel(cur_node->children));
       }
       else{
         //preuve que l'on ne boucle pas pour rien
@@ -212,7 +212,6 @@ void parse_stcm (xmlNode * a_node, STCMAssembly *stcmassembly) {
   }
 }
 
-
 void parser(const char* stcmXmlPath, STCMAssembly* assembly){
 	std::cout << "parse()\n";
 
@@ -224,12 +223,11 @@ void parser(const char* stcmXmlPath, STCMAssembly* assembly){
 	if (doc == NULL) {
 		std::cerr << "error: could not parse file at '" << stcmXmlPath << "'\n";
 	}
-  else{
-  	root_element = xmlDocGetRootElement(doc);
-  	parse_stcm(root_element, assembly);
-  }
+    else{
+  	    root_element = xmlDocGetRootElement(doc);
+  	    parse_stcm(root_element, assembly);
+    }
 
 	xmlFreeDoc(doc);
 	xmlCleanupParser();
-
 }
