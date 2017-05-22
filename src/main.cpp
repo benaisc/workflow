@@ -1,13 +1,13 @@
 #include "LibParser.h"
 
-void usage(){
-	printf("Usage: %s <path_to_assemblyXML>", argv[0]);
+void usage(char** arg){
+	printf("Usage: %s <path_to_assemblyXML>", arg[0]);
 }
 int main(int argc, char* argv[]){
   STCMAssembly stcm;
 
   if(argc < 2){
-	usage();
+	usage(argv);
 	exit(-1);
   }
   parser(argv[1], &stcm);
